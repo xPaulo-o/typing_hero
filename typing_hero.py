@@ -13,6 +13,13 @@ import pygame
 pygame.init()
 pygame.mixer.init()
 
+try:
+    BUTTON_CLICK_SOUND = pygame.mixer.Sound(BUTTON_CLICK_SOUND_PATH)
+except pygame.error as e:
+    print(f"Erro ao carregar som de clique: {e}")
+    BUTTON_CLICK_SOUND = None # Define como None se o som não puder ser carregado
+
+
 
 DISPLAY_INFO = pygame.display.Info()
 WIDTH, HEIGHT = DISPLAY_INFO.current_w, DISPLAY_INFO.current_h
@@ -72,25 +79,18 @@ def new_word(word_pool, min_speed, max_speed): # Adicionado min_speed e max_spee
         "color": CYAN if is_special else WHITE
     }
 
-def draw_game_over(final_score): # Renomeado e recebe final_score
-    screen.blit(GAME_OVER, (0, 0))
+def draw_game_over(final_score):
+    screen.blit(GAME_OVER, (0, 0)) 
     
     text = f"Pontuação Final: {final_score}"
     font = pygame.font.SysFont(None, 48)
-    pos = (WIDTH // 2, HEIGHT // 2)
 
     # Posição
     x = 500
     y = 200
-    draw_text_with_outline(
-        text,
-        font,
-        text_color=(255, 255, 255),     # Branco
-        outline_color=(0, 0, 0),        # Preto
-        bg_color=(50, 50, 50),       
-        pos=(x, y),
-        screen=screen
-    )
+
+    score_text_surface = font.render(text, True, WHITE)
+    screen.blit(score_text_surface, (x - score_text_surface.get_width() // 2, y - score_text_surface.get_height() // 2))
 
 
     # Botões
@@ -122,7 +122,7 @@ def draw_game_over(final_score): # Renomeado e recebe final_score
 
         pygame.display.flip()
 
-        for event in pygame.event.get():
+        for event in pygame.event.get(): # APENAS UM LOOP DE EVENTOS
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
@@ -130,9 +130,22 @@ def draw_game_over(final_score): # Renomeado e recebe final_score
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Clique esquerdo
                     if retry_rect.collidepoint(event.pos):
+                        play_button_click_sound() # ADICIONADO AQUI
                         return "game"
                     elif menu_rect.collidepoint(event.pos):
+                        play_button_click_sound() # ADICIONADO AQUI
                         return "menu"
+
+def stop_music():
+    """Para qualquer música que esteja tocando."""
+    pygame.mixer.music.stop()
+
+def play_button_click_sound():
+    """Toca o som do clique do botão, se disponível."""
+    if BUTTON_CLICK_SOUND:
+        BUTTON_CLICK_SOUND.play()
+
+
 
 def pause_menu():
     overlay = pygame.Surface((WIDTH, HEIGHT))
@@ -150,7 +163,7 @@ def pause_menu():
     menu_rect = pygame.Rect(center_x - button_w // 2, center_y + button_h + PAUSE_MENU_BUTTON_GAP, button_w, button_h)
 
     while True:
-        screen.blit(IMG_PAUSE , (0, 0))
+        screen.blit(IMG_PAUSE , (0, 0)) # Verifique se IMG_PAUSE está definido e carregado corretamente no settings.py ou no topo do arquivo
 
         title = title_font.render("Jogo Pausado", True, WHITE)
         screen.blit(title, (center_x - title.get_width() // 2, HEIGHT // 4))
@@ -172,18 +185,20 @@ def pause_menu():
 
         pygame.display.flip()
 
-        for event in pygame.event.get():
+        for event in pygame.event.get(): # APENAS UM LOOP DE EVENTOS
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if resume_rect.collidepoint(event.pos):
-                    return  # Continua
+                    play_button_click_sound() # ADICIONADO AQUI
+                    return
                 elif retry_rect.collidepoint(event.pos):
+                    play_button_click_sound() # ADICIONADO AQUI
                     main_game()  # Reinicia
                     return
                 elif menu_rect.collidepoint(event.pos):
+                    play_button_click_sound() # ADICIONADO AQUI
                     return draw_main_menu() # Volta ao menu
 
 
@@ -365,38 +380,34 @@ def draw_main_menu():
 
     pygame.display.flip()
 
-    # Evento de clique
-    for event in pygame.event.get():
+    for event in pygame.event.get(): 
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if play_button_rect.collidepoint(event.pos):
+                play_button_click_sound() # ADICIONADO AQUI
                 return "levels"  # Vai para o menu de seleção de fases
             if exit_button_rect.collidepoint(event.pos):
+                play_button_click_sound() # ADICIONADO AQUI
                 pygame.quit()
                 sys.exit()
+    return "menu"
 
-    return "menu" # Permanece no menu se nenhuma opção for clicada
+
 
 def draw_level_selection_menu():
     global fase_atual, unlocked_fases, max_scores
     screen.blit(FASE_MENU_BG, (0, 0)) # Fundo do menu de fases
 
-    #itle_text = title_font.render("SELECIONE A FASE", True, BLACK)
-    #screen.blit(title_text, (WIDTH // 2 - title_text.get_width() // 2, HEIGHT // 10))
-
     button_width = int(WIDTH * 0.10) # Botões mais estreitos
     button_height = int(HEIGHT * 0.07) # Botões mais baixos
     
-    # Posições para os botões de fase (vertical, como na imagem)
-    # Calcula a posição inicial X para centralizar a coluna de botões
     start_x = WIDTH // 2.8 - button_width // 1
     start_y = HEIGHT // 140
 
     espacamento_y = button_height + 2.5 # Espaçamento vertical entre os botões
     
-
     button_width = 100   
     button_height = 40  
 
@@ -421,7 +432,6 @@ def draw_level_selection_menu():
                                   button_rect.centery - level_text.get_height() // 2 - font_size // 4)) # Ajuste Y para deixar espaço para o score
 
         # Exibir Score Máximo
-        # Certifique-se que a chave é uma string, pois JSON salva chaves como strings
         if str(i) in max_scores:
             score_display_text = f"PONTUAÇÂO MAXIMA: {max_scores[str(i)]}"
             score_surface = font.render(score_display_text, True, BLACK)
@@ -434,18 +444,18 @@ def draw_level_selection_menu():
     # Botão Voltar (posicionado no canto inferior esquerdo como na imagem)
     back_button_width = int(WIDTH * 0.10)
     back_button_height = int(HEIGHT * 0.06)
-    back_button_rect = pygame.Rect(WIDTH * 0.02, HEIGHT * 0.88, back_button_width, back_button_height) # Ajustado para o canto inferior esquerdo
+    back_button_rect = pygame.Rect(WIDTH * 0.02, HEIGHT * 0.88, back_button_width, back_button_height) 
 
     mouse_pos = pygame.mouse.get_pos()
     back_color = LIGHT_GRAY if back_button_rect.collidepoint(mouse_pos) else DARK_GRAY
     pygame.draw.rect(screen, back_color, back_button_rect, border_radius=8)
-    back_text = font.render("VOLTAR", True, WHITE) # Texto como na imagem
+    back_text = font.render("VOLTAR", True, WHITE) 
     screen.blit(back_text, (back_button_rect.centerx - back_text.get_width() // 2,
                             back_button_rect.centery - back_text.get_height() // 2))
 
     pygame.display.flip()
 
-    for event in pygame.event.get():
+    for event in pygame.event.get(): 
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
@@ -457,13 +467,16 @@ def draw_level_selection_menu():
 
                 if button_rect.collidepoint(mouse_x, mouse_y):
                     if i in unlocked_fases:
+                        play_button_click_sound() # ADICIONADO AQUI
                         fase_atual = i
                         return "game" # Inicia o jogo na fase selecionada
                     else:
                         print(f"Fase {i} bloqueada!") # Mensagem de depuração
             if back_button_rect.collidepoint(mouse_x, mouse_y):
+                play_button_click_sound() # ADICIONADO AQUI
                 return "menu" # Volta para o menu principal
-    return "levels" # Permanece no menu de fases
+            
+    return "levels"
 
 
 
