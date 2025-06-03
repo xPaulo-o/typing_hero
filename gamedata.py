@@ -17,8 +17,3 @@ def load_game_data():
 def save_game_data(data):
     with open(SAVE_FILE, 'w') as f:
         json.dump(data, f, indent=4)
-
-# Exemplo de uso:
-# game_data = load_game_data()
-# print(game_data["max_scores"])
-# print(game_data["unlocked_fases"])
