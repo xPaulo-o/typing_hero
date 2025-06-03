@@ -132,5 +132,5 @@ FASE_MENU_BG = pygame.image.load("img/menu.png")
 FASE_MENU_BG = pygame.transform.scale(FASE_MENU_BG, (WIDTH, HEIGHT))
 MUSIC_MENU_PATH = "sounds/menu_music.mp3"
 BUTTON_CLICK_SOUND_PATH = os.path.join("sounds", "click.ogg")
-ANIMATED_BG_FRAMES = load_gif_frames("videos/fundo_gameplay.gif", (WIDTH, HEIGHT))
+ANIMATED_BG_FRAMES = load_gif_frames("videos/fundo_gameplay2.gif", (WIDTH, HEIGHT))
 ANIMATED_BG_FRAME_COUNT = len(ANIMATED_BG_FRAMES)

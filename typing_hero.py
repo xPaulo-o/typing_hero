@@ -308,16 +308,70 @@ def main_game():
 
         # Renderizar palavras
         for word in falling_words:
-            surface = font.render(word["word"], True, word.get("color", WHITE))
-            screen.blit(surface, (word["x"], word["y"]))
+            for word in falling_words:
+                text_surface = font.render(word["word"], True, word.get("color", WHITE))
+                
+                # Cálculo da posição e tamanho
+                text_rect = text_surface.get_rect()
+                padding = 10  # Espaço interno
+                bg_rect = pygame.Rect(
+                    word["x"] - padding // 2,
+                    word["y"] - padding // 2,
+                    text_rect.width + padding,
+                    text_rect.height + padding
+                )
+
+                # Cria superfície com fundo transparente
+                word_bg = pygame.Surface((bg_rect.width, bg_rect.height), pygame.SRCALPHA)
+
+                # Desenha retângulo arredondado com fundo preto semi-transparente
+                pygame.draw.rect(word_bg, DARK_GRAY, word_bg.get_rect(), border_radius=12)
+
+                # Desenha o texto por cima
+                word_bg.blit(text_surface, (padding // 2, padding // 2))
+
+                # Blita tudo na tela principal
+                screen.blit(word_bg, (bg_rect.x, bg_rect.y))
+
 
         # Mostrar entrada do jogador
-        input_surface = font.render(f"> {input_text}", True, WHITE)
-        screen.blit(input_surface, (WIDTH * PLAYER_INPUT_X_RATIO, HEIGHT * PLAYER_INPUT_Y_RATIO))
+        # Renderiza o texto digitado
+        input_text_display = input_text
+        input_surface = font.render(input_text_display, True, WHITE)
+
+        # Medidas do fundo
+        padding = 20
+        bg_width = input_surface.get_width() + padding
+        bg_height = input_surface.get_height() + padding
+        bg_x = (WIDTH - bg_width) // 2
+        bg_y = int(HEIGHT * 0.88)  # ou ajuste manualmente se preferir
+
+        # Cria superfície com fundo preto semi-transparente e bordas arredondadas
+        input_bg = pygame.Surface((bg_width, bg_height), pygame.SRCALPHA)
+        pygame.draw.rect(input_bg, DARK_GRAY, input_bg.get_rect(), border_radius=16)
+        input_bg.blit(input_surface, (padding // 2, padding // 2))
+
+        # Blita no centro da tela
+        screen.blit(input_bg, (bg_x, bg_y))
+
 
         # Mostrar pontuação
-        score_surface = font.render(f"Score: {score}", True, WHITE)
-        screen.blit(score_surface, (WIDTH * SCORE_DISPLAY_X_RATIO, HEIGHT * SCORE_DISPLAY_Y_RATIO))
+        # Fundo do Score (retângulo semi-transparente)
+        score_text = f"Score: {score}"
+        score_surface = font.render(score_text, True, WHITE)
+
+        score_bg_w = score_surface.get_width() + 20
+        score_bg_h = score_surface.get_height() + 10
+        score_bg_x = int(WIDTH * SCORE_DISPLAY_X_RATIO) - 10
+        score_bg_y = int(HEIGHT * SCORE_DISPLAY_Y_RATIO) - 5
+
+        score_bg = pygame.Surface((score_bg_w, score_bg_h), pygame.SRCALPHA)
+        pygame.draw.rect(score_bg, (0, 0, 0, 150), score_bg.get_rect(), border_radius=12)
+        screen.blit(score_bg, (score_bg_x, score_bg_y))
+
+        screen.blit(score_bg, (score_bg_x, score_bg_y))
+        screen.blit(score_surface, (score_bg_x + 10, score_bg_y + 5))
+
 
         # Barra de energia
         bar_w = int(WIDTH * ENERGY_BAR_WIDTH_RATIO)
@@ -326,12 +380,15 @@ def main_game():
         bar_y = int(HEIGHT * ENERGY_BAR_Y_RATIO)
         fill = int((bar_value / MAX_ENERGY) * bar_w)
         bar_color = GOLD if bonus_mode else GREEN
-        pygame.draw.rect(screen, GRAY, (bar_x, bar_y, bar_w, bar_h))
-        pygame.draw.rect(screen, bar_color, (bar_x, bar_y, fill, bar_h))
+        # Fundo da barra (cinza escuro com borda)
+        pygame.draw.rect(screen, (40, 40, 40), (bar_x - 2, bar_y - 2, bar_w + 4, bar_h + 4), border_radius=10)  # Borda
+        pygame.draw.rect(screen, (80, 80, 80), (bar_x, bar_y, bar_w, bar_h), border_radius=8)  # Fundo da barra
+        pygame.draw.rect(screen, bar_color, (bar_x, bar_y, fill, bar_h), border_radius=8)  # Barra de energia preenchida
+
 
         # Combo
         if combo >= 1:
-            combo_text = font.render(f"Combo x{min(combo + 1, COMBO_MAX_MULTIPLIER_BASE)}", True, YELLOW)
+            combo_text = font.render(f"Combo x{min(combo // 10 + 1, COMBO_MAX_MULTIPLIER_BASE)}", True, YELLOW)
             screen.blit(combo_text, (WIDTH // 2 - combo_text.get_width() // 2, bar_y + bar_h + 10))
 
         # Modo bônus
