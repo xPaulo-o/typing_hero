@@ -34,7 +34,6 @@ WIDTH, HEIGHT = info.current_w, info.current_h
 # Define se o jogo deve rodar em tela cheia
 FULLSCREEN_MODE = True
 
-#WIDTH, HEIGHT = 1280, 1080
 
 WORD_SPAWN_INTERVAL_MS = 2000  # Exemplo: uma nova palavra a cada 2 segundos
 WORD_INITIAL_Y_OFFSET = 50  # Ajuste este valor conforme a necessidade

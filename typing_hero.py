@@ -216,7 +216,6 @@ def main_game():
 
     # Pega as configurações da fase atual do dicionário 'fases'
     # Usa fase_atual para acessar corretamente (fases são de 1 a 13)
-    # Certifique-se de que fase_atual é um valor válido para a chave no dicionário fases
     if fase_atual not in fases:
         print(f"Erro: Fase {fase_atual} não encontrada no dicionário de fases. Voltando para a Fase 1.")
         fase_atual = 1
@@ -355,7 +354,6 @@ def draw_main_menu():
     button_width = int(WIDTH * 0.25)
     button_height = int(HEIGHT * 0.08)
 
-    # Posicionamento dos botões baseado na imagem que você enviou
     play_button_x = WIDTH // 1.2 - button_width // 1
     play_button_y = int(HEIGHT * 0.60)  # Botão JOGAR 
 
@@ -390,10 +388,10 @@ def draw_main_menu():
             sys.exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if play_button_rect.collidepoint(event.pos):
-                play_button_click_sound() # ADICIONADO AQUI
+                play_button_click_sound() 
                 return "levels"  # Vai para o menu de seleção de fases
             if exit_button_rect.collidepoint(event.pos):
-                play_button_click_sound() # ADICIONADO AQUI
+                play_button_click_sound() 
                 pygame.quit()
                 sys.exit()
     return "menu"
@@ -471,13 +469,13 @@ def draw_level_selection_menu():
 
                 if button_rect.collidepoint(mouse_x, mouse_y):
                     if i in unlocked_fases:
-                        play_button_click_sound() # ADICIONADO AQUI
+                        play_button_click_sound()
                         fase_atual = i
                         return "game" # Inicia o jogo na fase selecionada
                     else:
                         print(f"Fase {i} bloqueada!") # Mensagem de depuração
             if back_button_rect.collidepoint(mouse_x, mouse_y):
-                play_button_click_sound() # ADICIONADO AQUI
+                play_button_click_sound() 
                 return "menu" # Volta para o menu principal
             
     return "levels"
