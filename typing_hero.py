@@ -3,7 +3,7 @@ import random
 import sys
 import os
 import unicodedata
-from settings import * # Garanta que settings.py tenha as cores e outras constantes
+from settings import * 
 from fases import fases # Importa o dicionário de fases
 from gamedata import load_game_data, save_game_data # Importa as funções de save/load
 import pygame
