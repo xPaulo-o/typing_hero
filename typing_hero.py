@@ -51,17 +51,11 @@ except pygame.error as e:
     print(f"Erro ao carregar música do menu: {e}")
 
 def play_menu_music():
-    """Toca a música do menu em loop."""
-    if pygame.mixer.music.get_busy(): # Se já estiver tocando, pare
-        pygame.mixer.music.stop()
     try:
+        pygame.mixer.music.load(MUSIC_MENU_PATH) # MUSIC_MENU_PATH deve ser definida no settings.py
         pygame.mixer.music.play(-1) # -1 para loop infinito
     except pygame.error as e:
-        print(f"Não foi possível tocar a música do menu: {e}")
-
-def stop_music():
-    """Para qualquer música que esteja tocando."""
-    pygame.mixer.music.stop()
+        print(f"Erro ao carregar ou tocar música do menu: {e}")
 
     
 
@@ -155,56 +149,54 @@ def play_button_click_sound():
 
 
 def pause_menu():
-    overlay = pygame.Surface((WIDTH, HEIGHT))
-    overlay.set_alpha(PAUSE_OVERLAY_ALPHA)
-    overlay.fill(BLACK)
+    # ... (código existente para desenhar o menu de pausa)
 
-    button_w = PAUSE_MENU_BUTTON_WIDTH
-    button_h = PAUSE_MENU_BUTTON_HEIGHT
-
-    center_x = WIDTH // 2
-    center_y = HEIGHT // 2
-
-    resume_rect = pygame.Rect(center_x - button_w // 2, center_y - button_h - PAUSE_MENU_BUTTON_GAP, button_w, button_h)
-    retry_rect = pygame.Rect(center_x - button_w // 2, center_y, button_w, button_h)
-    menu_rect = pygame.Rect(center_x - button_w // 2, center_y + button_h + PAUSE_MENU_BUTTON_GAP, button_w, button_h)
+    pygame.mixer.music.pause() # Pausa a música ao entrar no menu de pausa
 
     while True:
-        screen.blit(IMG_PAUSE , (0, 0)) # Certifique-se que IMG_PAUSE está definido e carregado
+        # Isso garante que a tela de pausa seja desenhada continuamente
+        # enquanto o menu de pausa estiver ativo.
+        screen.blit(IMG_PAUSE, (0, 0)) # Certifique-se de que a imagem de pausa está sendo desenhada
 
-        mouse_pos = pygame.mouse.get_pos()
+        # Desenha os botões (apenas para ter certeza que são visíveis)
+        resume_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2 - 50, 200, 50)
+        retry_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2 + 10, 200, 50)
+        menu_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2 + 70, 200, 50)
 
-        # Botões com hover
-        botoes = [
-            (resume_rect, "Continuar"),
-            (retry_rect, "Reiniciar Fase"),
-            (menu_rect, "Menu Principal")
-        ]
-
-        for rect, label in botoes:
-            cor = LIGHT_GRAY if rect.collidepoint(mouse_pos) else DARK_GRAY
-            pygame.draw.rect(screen, cor, rect, border_radius=20)
-            texto = font.render(label, True, WHITE)
-            screen.blit(texto, (rect.centerx - texto.get_width() // 2, rect.centery - texto.get_height() // 2))
-
+        draw_button(screen, resume_rect, "Retomar", BLACK, LIGHT_GRAY, font) 
+        draw_button(screen, retry_rect, "Reiniciar Fase", BLACK, LIGHT_GRAY, font) 
+        draw_button(screen, menu_rect, "Menu Principal", BLACK, LIGHT_GRAY, font) 
+        
         pygame.display.flip()
 
-        for event in pygame.event.get():
+
+        for event in pygame.event.get(): # O erro está aqui, fora deste loop
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                # O bloco de código que estava fora do loop 'for' agora está aqui dentro.
+                # Dessa forma, 'event' sempre terá um valor quando 'event.type' e 'event.button' forem acessados.
                 if resume_rect.collidepoint(event.pos):
                     play_button_click_sound()
+                    pygame.mixer.music.unpause() # Retoma a música
                     return "resume"  # Retorna para main_game continuar
                 elif retry_rect.collidepoint(event.pos):
                     play_button_click_sound()
+                    pygame.mixer.music.stop() # Para a música para reiniciar a fase
                     return "restart" # Retorna para run_game reiniciar a fase
                 elif menu_rect.collidepoint(event.pos):
                     play_button_click_sound()
+                    pygame.mixer.music.stop() # Para a música para ir ao menu principal
                     return "menu" # Retorna para run_game ir ao menu principal
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    play_button_click_sound()
+                    pygame.mixer.music.unpause() # Retoma a música
+                    return "resume"
 
+        # Adicione um pequeno delay para evitar que o loop rode muito rápido
+        pygame.time.delay(10)
 
 def main_game():
     global fase_atual, max_scores, unlocked_fases
@@ -223,7 +215,6 @@ def main_game():
     stop_music() 
 
     # Pega as configurações da fase atual do dicionário 'fases'
-    # Usa fase_atual para acessar corretamente (fases são de 1 a 13)
     if fase_atual not in fases:
         print(f"Erro: Fase {fase_atual} não encontrada no dicionário de fases. Voltando para a Fase 1.")
         fase_atual = 1
@@ -234,6 +225,16 @@ def main_game():
     word_list = current_fase_data["palavras"]
     current_min_speed = current_fase_data["min_speed"]
     current_max_speed = current_fase_data["max_speed"]
+
+    # Variável para controlar se a velocidade já foi acelerada
+    accelerated_speed = False
+
+    # Carrega e toca a música da gameplay
+    try:
+        pygame.mixer.music.load(MUSIC_GAMEPLAY_PATH)
+        pygame.mixer.music.play(-1) # -1 para loop infinito
+    except pygame.error as e:
+        print(f"Erro ao carregar ou tocar música da gameplay: {e}")
 
     NEW_WORD_EVENT = pygame.USEREVENT + 1
     pygame.time.set_timer(NEW_WORD_EVENT, WORD_SPAWN_INTERVAL_MS)
@@ -247,6 +248,18 @@ def main_game():
             frame_index = (frame_index + 1) % ANIMATED_BG_FRAME_COUNT
 
         screen.blit(ANIMATED_BG_FRAMES[frame_index], (0, 0))
+
+        # Verifica o tempo da música para aumentar a velocidade das palavras
+        # Certifique-se de que a música está tocando antes de tentar obter a posição
+        if not accelerated_speed and pygame.mixer.music.get_busy() and \
+           pygame.mixer.music.get_pos() >= MUSIC_ACCELERATION_TIME_MS:
+
+            print("Acelerando a velocidade das palavras!") 
+            current_min_speed *= 2  # Dobra a velocidade mínima
+            current_max_speed *= 2  # Dobra a velocidade máxima
+            accelerated_speed = True # Garante que só acelere uma vez
+
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -255,10 +268,15 @@ def main_game():
                 if event.key == pygame.K_ESCAPE:
                     action = pause_menu() # Pega a ação da tela de pausa
                     if action == "resume":
+                        # Se a música estava tocando e foi pausada, retome-a
+                        if pygame.mixer.music.get_busy():
+                            pygame.mixer.music.unpause()
                         pass # Continua o loop do jogo
                     elif action == "restart":
+                        pygame.mixer.music.stop() # Para a música antes de reiniciar
                         return "restart" # Indica ao run_game para reiniciar
                     elif action == "menu":
+                        pygame.mixer.music.stop() # Para a música antes de voltar ao menu
                         return "menu"
                 elif event.key == pygame.K_BACKSPACE:
                     input_text = input_text[:-1]
@@ -290,7 +308,8 @@ def main_game():
                             continue
                         input_text += event.unicode
             elif event.type == NEW_WORD_EVENT:
-                falling_words.append(new_word(word_list, current_min_speed, current_max_speed)) # Passa as velocidades
+                # Passa as velocidades que podem ter sido ajustadas
+                falling_words.append(new_word(word_list, current_min_speed, current_max_speed)) 
 
         # Atualiza posição e checa palavras que caíram
         for word in list(falling_words):
@@ -303,57 +322,49 @@ def main_game():
 
         bonus_mode = bar_value >= MAX_ENERGY
 
-        # Renderizar palavras
+        # Renderizar palavras (restante do seu código de renderização)
         for word in falling_words:
-            for word in falling_words:
-                text_surface = font.render(word["word"], True, word.get("color", WHITE))
-                
-                # Cálculo da posição e tamanho
-                text_rect = text_surface.get_rect()
-                padding = 10  # Espaço interno
-                bg_rect = pygame.Rect(
-                    word["x"] - padding // 2,
-                    word["y"] - padding // 2,
-                    text_rect.width + padding,
-                    text_rect.height + padding
-                )
+            text_surface = font.render(word["word"], True, word.get("color", WHITE))
 
-                # Cria superfície com fundo transparente
-                word_bg = pygame.Surface((bg_rect.width, bg_rect.height), pygame.SRCALPHA)
+            # Cálculo da posição e tamanho
+            text_rect = text_surface.get_rect()
+            padding = 10  # Espaço interno
+            bg_rect = pygame.Rect(
+                word["x"] - padding // 2,
+                word["y"] - padding // 2,
+                text_rect.width + padding,
+                text_rect.height + padding
+            )
 
-                # Desenha retângulo arredondado com fundo preto semi-transparente
-                pygame.draw.rect(word_bg, BLACK, word_bg.get_rect(), border_radius=12)
+            # Cria superfície com fundo transparente
+            word_bg = pygame.Surface((bg_rect.width, bg_rect.height), pygame.SRCALPHA)
 
-                # Desenha o texto por cima
-                word_bg.blit(text_surface, (padding // 2, padding // 2))
+            # Desenha retângulo arredondado com fundo preto semi-transparente
+            pygame.draw.rect(word_bg, BLACK, word_bg.get_rect(), border_radius=12)
 
-                # Blita tudo na tela principal
-                screen.blit(word_bg, (bg_rect.x, bg_rect.y))
+            # Desenha o texto por cima
+            word_bg.blit(text_surface, (padding // 2, padding // 2))
 
+            # Blita tudo na tela principal
+            screen.blit(word_bg, (bg_rect.x, bg_rect.y))
 
-        # Mostrar entrada do jogador
-        # Renderiza o texto digitado
+        # Mostrar entrada do jogador (restante do seu código)
         input_text_display = input_text
         input_surface = font.render(input_text_display, True, WHITE)
 
-        # Medidas do fundo
         padding = 20
         bg_width = input_surface.get_width() + padding
         bg_height = input_surface.get_height() + padding
         bg_x = (WIDTH - bg_width) // 2
-        bg_y = int(HEIGHT * 0.88)  # ou ajuste manualmente se preferir
+        bg_y = int(HEIGHT * 0.88)
 
-        # Cria superfície com fundo preto semi-transparente e bordas arredondadas
         input_bg = pygame.Surface((bg_width, bg_height), pygame.SRCALPHA)
         pygame.draw.rect(input_bg, BLACK, input_bg.get_rect(), border_radius=16)
         input_bg.blit(input_surface, (padding // 2, padding // 2))
 
-        # Blita no centro da tela
         screen.blit(input_bg, (bg_x, bg_y))
 
-
-        # Mostrar pontuação
-        # Fundo do Score (retângulo semi-transparente)
+        # Mostrar pontuação (restante do seu código)
         score_text = f"Score: {score}"
         score_surface = font.render(score_text, True, WHITE)
 
@@ -369,19 +380,16 @@ def main_game():
         screen.blit(score_bg, (score_bg_x, score_bg_y))
         screen.blit(score_surface, (score_bg_x + 10, score_bg_y + 5))
 
-
-        # Barra de energia
+        # Barra de energia (restante do seu código)
         bar_w = int(WIDTH * ENERGY_BAR_WIDTH_RATIO)
         bar_h = int(HEIGHT * ENERGY_BAR_HEIGHT_RATIO)
         bar_x = WIDTH - bar_w - int(WIDTH * ENERGY_BAR_RIGHT_MARGIN_RATIO)
         bar_y = int(HEIGHT * ENERGY_BAR_Y_RATIO)
         fill = int((bar_value / MAX_ENERGY) * bar_w)
         bar_color = GOLD if bonus_mode else GREEN
-        # Fundo da barra (cinza escuro com borda)
-        pygame.draw.rect(screen, (40, 40, 40), (bar_x - 2, bar_y - 2, bar_w + 4, bar_h + 4), border_radius=10)  # Borda
-        pygame.draw.rect(screen, (80, 80, 80), (bar_x, bar_y, bar_w, bar_h), border_radius=8)  # Fundo da barra
-        pygame.draw.rect(screen, bar_color, (bar_x, bar_y, fill, bar_h), border_radius=8)  # Barra de energia preenchida
-
+        pygame.draw.rect(screen, (40, 40, 40), (bar_x - 2, bar_y - 2, bar_w + 4, bar_h + 4), border_radius=10)
+        pygame.draw.rect(screen, (80, 80, 80), (bar_x, bar_y, bar_w, bar_h), border_radius=8)
+        pygame.draw.rect(screen, bar_color, (bar_x, bar_y, fill, bar_h), border_radius=8)
 
         # Combo
         if combo >= 1:
@@ -394,24 +402,20 @@ def main_game():
             screen.blit(bonus_text, (bar_x + bar_w // 2 - bonus_text.get_width() // 2, bar_y + bar_h + BONUS_TEXT_Y_OFFSET_FROM_BAR))
 
         if bar_value <= MIN_ENERGY_FOR_GAME_OVER:
-
-            # Sempre atualiza o score máximo se o score atual for maior
             if score > max_scores.get(str(fase_atual), 0):
                 max_scores[str(fase_atual)] = score
                 game_data["max_scores"] = max_scores
                 save_game_data(game_data)
 
-            # Lógica para desbloquear a próxima fase se o score for maior que 0
-            # e a próxima fase existir e não estiver desbloqueada
             if score > 0 and (fase_atual + 1) in fases and (fase_atual + 1) not in unlocked_fases:
                 unlocked_fases.append(fase_atual + 1)
-                unlocked_fases.sort() # Mantém a lista ordenada
+                unlocked_fases.sort()
                 game_data["unlocked_fases"] = unlocked_fases
                 save_game_data(game_data)
-         
 
-            return draw_game_over(score) # Chama a tela de Game Over e retorna o estado
-        
+            pygame.mixer.music.stop() # Para a música ao finalizar o jogo
+            return draw_game_over(score) 
+
         pygame.display.flip()
         clock.tick(60)
 

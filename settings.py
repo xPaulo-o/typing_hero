@@ -39,6 +39,18 @@ WORD_SPAWN_INTERVAL_MS = 2000  # Exemplo: uma nova palavra a cada 2 segundos
 WORD_INITIAL_Y_OFFSET = 50  # Ajuste este valor conforme a necessidade
 
 
+def draw_button(surface, rect, text, color, hover_color, button_font): # AGORA TEM 6 ARGUMENTOS
+    mouse_pos = pygame.mouse.get_pos()
+    
+    if rect.collidepoint(mouse_pos):
+        pygame.draw.rect(surface, hover_color, rect, border_radius=12)
+    else:
+        pygame.draw.rect(surface, color, rect, border_radius=12)
+
+    text_surface = button_font.render(text, True, (255, 255, 255)) # Use button_font.render
+    text_rect = text_surface.get_rect(center=rect.center)
+    surface.blit(text_surface, text_rect)
+
 def load_gif_frames(path, size):
     pil_img = Image.open(path)
     frames = []
@@ -129,6 +141,9 @@ BONUS_TEXT_Y_OFFSET_FROM_BAR = 10
 SCREEN_WIDTH = 1920 
 SCREEN_HEIGHT = 1080
 
+# Tempo em milissegundos para a música atingir o ponto de aceleração
+MUSIC_ACCELERATION_TIME_MS = 126600 # Exemplo: 60 segundos (60000 ms)
+
 # Cminhos de recursos
 IMG_PAUSE = pygame.image.load("img/pause_menu2.png")
 IMG_PAUSE = pygame.transform.scale(IMG_PAUSE, (WIDTH, HEIGHT))
@@ -141,3 +156,4 @@ MUSIC_MENU_PATH = "sounds/audio_menu.mp3"
 BUTTON_CLICK_SOUND_PATH = os.path.join("sounds", "click.ogg")
 ANIMATED_BG_FRAMES = load_gif_frames("videos/fundo_gameplay3.gif", (WIDTH, HEIGHT))
 ANIMATED_BG_FRAME_COUNT = len(ANIMATED_BG_FRAMES)
+MUSIC_GAMEPLAY_PATH = "sounds/gameplay_music.mp3"
