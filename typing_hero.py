@@ -163,7 +163,7 @@ def pause_menu():
     menu_rect = pygame.Rect(center_x - button_w // 2, center_y + button_h + PAUSE_MENU_BUTTON_GAP, button_w, button_h)
 
     while True:
-        screen.blit(IMG_PAUSE , (0, 0)) # Verifique se IMG_PAUSE está definido e carregado corretamente no settings.py ou no topo do arquivo
+        screen.blit(IMG_PAUSE , (0, 0)) # Certifique-se que IMG_PAUSE está definido e carregado
 
         title = title_font.render("Jogo Pausado", True, WHITE)
         screen.blit(title, (center_x - title.get_width() // 2, HEIGHT // 4))
@@ -185,21 +185,21 @@ def pause_menu():
 
         pygame.display.flip()
 
-        for event in pygame.event.get(): # APENAS UM LOOP DE EVENTOS
+        for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if resume_rect.collidepoint(event.pos):
-                    play_button_click_sound() # ADICIONADO AQUI
-                    return
+                    play_button_click_sound()
+                    return "resume"  # Retorna para main_game continuar
                 elif retry_rect.collidepoint(event.pos):
-                    play_button_click_sound() # ADICIONADO AQUI
-                    main_game()  # Reinicia
-                    return
+                    play_button_click_sound()
+                    return "restart" # Retorna para run_game reiniciar a fase
                 elif menu_rect.collidepoint(event.pos):
-                    play_button_click_sound() # ADICIONADO AQUI
-                    return draw_main_menu() # Volta ao menu
+                    play_button_click_sound()
+                    return "menu" # Retorna para run_game ir ao menu principal
 
 
 def main_game():
@@ -233,7 +233,7 @@ def main_game():
 
     running = True
     while running:
-        screen.fill(BLACK) # Limpa a tela a cada frame
+        screen.fill(BLACK)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -241,9 +241,13 @@ def main_game():
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    # Se pause_menu retorna "menu", significa que o usuário quer ir para o menu principal
-                    if pause_menu() == "menu":
-                        return "menu" # Retorna "menu" para a função run_game
+                    action = pause_menu() # Pega a ação da tela de pausa
+                    if action == "resume":
+                        pass # Continua o loop do jogo
+                    elif action == "restart":
+                        return "restart" # Indica ao run_game para reiniciar
+                    elif action == "menu":
+                        return "menu"
                 elif event.key == pygame.K_BACKSPACE:
                     input_text = input_text[:-1]
                 elif event.key == pygame.K_RETURN:
@@ -483,7 +487,6 @@ def draw_level_selection_menu():
 def run_game():
     current_state = "menu"
 
-    # Toca a música do menu assim que o jogo inicia, pela primeira vez
     play_menu_music() 
 
     while True:
@@ -494,11 +497,18 @@ def run_game():
         elif current_state == "game":
             if pygame.mixer.music.get_busy():
                 pygame.mixer.music.stop() 
-            current_state = main_game()
+            returned_state = main_game()
+            if returned_state == "menu":
+                current_state = "menu"
+            elif returned_state == "restart":
+                current_state = "game" # Permanece no estado 'game' para reiniciar o loop de main_game
+            else: # Se o retorno for de game over (draw_game_over), ele já retorna "game" ou "menu"
+                current_state = returned_state 
         elif current_state == "levels":
             current_state = draw_level_selection_menu()
+        elif current_state == "restart": # Adicione um estado para reiniciar se desejar um controle mais explícito
+            current_state = "game" # Isso fará com que main_game seja chamado novamente
         else:
-            # Caso algum estado inesperado seja retornado, encerra o jogo
             pygame.quit()
             sys.exit()
 
