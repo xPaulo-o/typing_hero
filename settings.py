@@ -130,11 +130,11 @@ SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
 
 # Cminhos de recursos
-IMG_PAUSE = pygame.image.load("img/pause_menu.png")
+IMG_PAUSE = pygame.image.load("img/pause_menu2.png")
 IMG_PAUSE = pygame.transform.scale(IMG_PAUSE, (WIDTH, HEIGHT))
 GAME_OVER = pygame.image.load("img/game_over.jpeg")
 GAME_OVER = pygame.transform.scale(GAME_OVER, (WIDTH, HEIGHT))
-IMG_MENU_BG = "img/img0.png"
+IMG_MENU_BG = "img/img1.png"
 FASE_MENU_BG = pygame.image.load("img/menu.png")
 FASE_MENU_BG = pygame.transform.scale(FASE_MENU_BG, (WIDTH, HEIGHT))
 MUSIC_MENU_PATH = "sounds/audio_menu.mp3"

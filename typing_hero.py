@@ -172,9 +172,6 @@ def pause_menu():
     while True:
         screen.blit(IMG_PAUSE , (0, 0)) # Certifique-se que IMG_PAUSE está definido e carregado
 
-        title = title_font.render("Jogo Pausado", True, WHITE)
-        screen.blit(title, (center_x - title.get_width() // 2, HEIGHT // 4))
-
         mouse_pos = pygame.mouse.get_pos()
 
         # Botões com hover
