@@ -504,7 +504,7 @@ def draw_level_selection_menu():
         pygame.draw.rect(screen, button_color, button_rect, border_radius=40) # Cantos levemente arredondados
         level_text = font.render(f"Fase {i}", True, text_color)
         screen.blit(level_text, (button_rect.centerx - level_text.get_width() // 2,
-                                  button_rect.centery - level_text.get_height() // 2 - font_size // 4)) # Ajuste Y para deixar espaço para o score
+                                  button_rect.centery - level_text.get_height() // 2 - font_size // 4)) # Ajustar Y para deixar espaço para o score
 
         # Exibir Score Máximo
         if str(i) in max_scores:
@@ -577,7 +577,7 @@ def run_game():
                 current_state = returned_state 
         elif current_state == "levels":
             current_state = draw_level_selection_menu()
-        elif current_state == "restart": # Adicione um estado para reiniciar se desejar um controle mais explícito
+        elif current_state == "restart": 
             current_state = "game" # Isso fará com que main_game seja chamado novamente
         else:
             pygame.quit()
