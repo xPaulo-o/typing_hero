@@ -89,8 +89,16 @@ def draw_game_over(final_score):
     x = 500
     y = 200
 
-    score_text_surface = font.render(text, True, WHITE)
-    screen.blit(score_text_surface, (x - score_text_surface.get_width() // 2, y - score_text_surface.get_height() // 2))
+    draw_text_with_outline(
+        text,
+        font,
+        text_color=(255, 255, 255),     # Branco
+        outline_color=(0, 0, 0),        # Preto
+        bg_color=(50, 50, 50),       
+        pos=(x, y),
+        screen=screen
+    )
+ 
 
 
     # Botões
@@ -130,10 +138,10 @@ def draw_game_over(final_score):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Clique esquerdo
                     if retry_rect.collidepoint(event.pos):
-                        play_button_click_sound() # ADICIONADO AQUI
+                        play_button_click_sound()
                         return "game"
                     elif menu_rect.collidepoint(event.pos):
-                        play_button_click_sound() # ADICIONADO AQUI
+                        play_button_click_sound()
                         return "menu"
 
 def stop_music():
