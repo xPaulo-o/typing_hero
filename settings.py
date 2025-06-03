@@ -1,7 +1,7 @@
 
 import pygame
 import os
-
+from PIL import Image
 
 #cores
 WHITE = (255, 255, 255)
@@ -37,6 +37,24 @@ FULLSCREEN_MODE = True
 
 WORD_SPAWN_INTERVAL_MS = 2000  # Exemplo: uma nova palavra a cada 2 segundos
 WORD_INITIAL_Y_OFFSET = 50  # Ajuste este valor conforme a necessidade
+
+
+def load_gif_frames(path, size):
+    pil_img = Image.open(path)
+    frames = []
+
+    try:
+        while True:
+            frame = pil_img.convert("RGBA")
+            pygame_img = pygame.image.fromstring(frame.tobytes(), frame.size, frame.mode)
+            pygame_img = pygame.transform.scale(pygame_img, size)
+            frames.append(pygame_img)
+            pil_img.seek(pil_img.tell() + 1)
+    except EOFError:
+        pass  # acabou os frames
+
+    return frames
+
 
 def draw_text_with_outline(text, font, text_color, outline_color, bg_color, pos, screen):
     # Renderiza o texto principal
@@ -114,9 +132,5 @@ FASE_MENU_BG = pygame.image.load("img/menu.png")
 FASE_MENU_BG = pygame.transform.scale(FASE_MENU_BG, (WIDTH, HEIGHT))
 MUSIC_MENU_PATH = "sounds/menu_music.mp3"
 BUTTON_CLICK_SOUND_PATH = os.path.join("sounds", "click.ogg")
-#VIDEO_INTRO_PATH = "videos/intro.mp4"
-
-
-# SOM_ACERTO = "sounds/acerto.wav"
-# SOM_ERRO = "sounds/erro.wav"           >>>>     ainda falta adicionar musica
-
+ANIMATED_BG_FRAMES = load_gif_frames("videos/fundo_gameplay.gif", (WIDTH, HEIGHT))
+ANIMATED_BG_FRAME_COUNT = len(ANIMATED_BG_FRAMES)

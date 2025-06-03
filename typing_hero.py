@@ -6,7 +6,6 @@ import unicodedata
 from settings import * # Garanta que settings.py tenha as cores e outras constantes
 from fases import fases # Importa o dicionário de fases
 from gamedata import load_game_data, save_game_data # Importa as funções de save/load
-from moviepy import VideoFileClip
 import pygame
 
 
@@ -220,6 +219,10 @@ def main_game():
     bonus_mode = False
     combo = 0
 
+    frame_index = 0
+    frame_timer = 0
+    FRAME_DURATION = 100  # milissegundos por frame
+
     stop_music() 
 
     # Pega as configurações da fase atual do dicionário 'fases'
@@ -240,8 +243,13 @@ def main_game():
 
     running = True
     while running:
-        screen.fill(BLACK)
+        # Atualiza o fundo animado do gif
+        frame_timer += clock.get_time()
+        if frame_timer >= FRAME_DURATION:
+            frame_timer = 0
+            frame_index = (frame_index + 1) % ANIMATED_BG_FRAME_COUNT
 
+        screen.blit(ANIMATED_BG_FRAMES[frame_index], (0, 0))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
