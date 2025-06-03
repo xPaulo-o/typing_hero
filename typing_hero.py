@@ -32,13 +32,32 @@ logo_height = int(logo_width * 0.625)
 # Carrega e redimensiona as imagens definidas no settings.py
 IMG_MENU_BG = pygame.transform.scale(pygame.image.load(IMG_MENU_BG), (WIDTH, HEIGHT))
 
-# --- VARIÁVEIS GLOBAIS PARA DADOS DO JOGO ---
+
 game_data = load_game_data()
 max_scores = game_data.get("max_scores", {})
 unlocked_fases = game_data.get("unlocked_fases", [1]) # Começa com a fase 1 desbloqueada
-fase_atual = 1 # Inicia na fase 1
-# --- FIM VARIÁVEIS GLOBAIS ---
 
+
+
+try:
+    pygame.mixer.music.load(MUSIC_MENU_PATH)
+except pygame.error as e:
+    print(f"Erro ao carregar música do menu: {e}")
+
+def play_menu_music():
+    """Toca a música do menu em loop."""
+    if pygame.mixer.music.get_busy(): # Se já estiver tocando, pare
+        pygame.mixer.music.stop()
+    try:
+        pygame.mixer.music.play(-1) # -1 para loop infinito
+    except pygame.error as e:
+        print(f"Não foi possível tocar a música do menu: {e}")
+
+def stop_music():
+    """Para qualquer música que esteja tocando."""
+    pygame.mixer.music.stop()
+
+    
 
 
 def new_word(word_pool, min_speed, max_speed): # Adicionado min_speed e max_speed
@@ -177,6 +196,8 @@ def main_game():
     bar_value = INITIAL_ENERGY
     bonus_mode = False
     combo = 0
+
+    stop_music() 
 
     # Pega as configurações da fase atual do dicionário 'fases'
     # Usa fase_atual para acessar corretamente (fases são de 1 a 13)
@@ -447,12 +468,19 @@ def draw_level_selection_menu():
 
 
 def run_game():
-    current_state = "menu" # Inicia no menu principal
+    current_state = "menu"
+
+    # Toca a música do menu assim que o jogo inicia, pela primeira vez
+    play_menu_music() 
 
     while True:
         if current_state == "menu":
+            if not pygame.mixer.music.get_busy(): 
+                play_menu_music()
             current_state = draw_main_menu()
         elif current_state == "game":
+            if pygame.mixer.music.get_busy():
+                pygame.mixer.music.stop() 
             current_state = main_game()
         elif current_state == "levels":
             current_state = draw_level_selection_menu()

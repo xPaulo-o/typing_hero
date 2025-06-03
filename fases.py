@@ -1,6 +1,6 @@
        
 # cada fase tem suas palavras e velocidade que pode ser ajustado com os valores 
-#"min_speed": 1, "max_speed": 1 de cada string o min e a velocidade minima da palavra o max e a maxima
+#"min_speed": 1, "max_speed": 1 de cada string o min e a velocidade minima da palavra o max e a maxima que ela ira aparecer
 
 
 
@@ -8,7 +8,7 @@ fases = {
     1: {"palavras": ["fel", "vil", "mal", "ver", "mãe", "sob", "ter", "ego", "bem", "mas", "dom", "bom", "vir", "são", "dar", 
         "ora", "vão", "que", "era", "seu", "nós", "elo", "com", "luz", "mim", "foi", "réu", "tal", "rol", "uma", "fim", "até", "por", "lua", 
         "hum", "dor", "vez", "pós", "vis", "ler", "sol", "ato", "pai", "sem", "dia", "irá", "dou", "pro", "eis", "rua", "ode", "tez", "nem", 
-        "voz", "tão", "ajo", "fiz", "meu", "gay", "lei", "voo", "mau", "afã", "pôr", "mão", "num", "olá", "dês", "lar", "sua", "for", "rio", 
+        "voz", "tão", "ajo", "fiz", "meu", "lei", "voo", "mau", "afã", "pôr", "mão", "num", "olá", "dês", "lar", "sua", "for", "rio", 
         "cia", "daí", "jus", "fez", "ira", "amo", "som", "via", "sim", "nau", "uso", "más", "rei", "jaz", "tem", "mês", "boa", "asa", "aia", 
         "uns", "ido", "pal", "ele", "clã"], "min_speed": 1, "max_speed": 1},
 
@@ -17,20 +17,20 @@ fases = {
         "pude", "amar", "ruim", "área", "para", "rude", "será", "doce", "coxo", "ater", "soar", "cota", "trás", "fase", "ente", "logo", "auto", "alma", 
         "deus", "voga", "onde", "arte", "pelo", "sido", "jugo", "ante", "cedo", "rima", "meio", "traz", "numa", "isso", "meta", "sela", "cujo", "noia", 
         "sair", "cela", "teor", "asco", "face", "foco", "alvo", "ódio", "nojo", "alto", "agir", "base", "pose", "vale", "teve", "todo", "ócio", "eita", 
-        "rito", "irão", "novo", "ágil", "bojo", "tese", "alva", "nada", "quer", "alta"], "min_speed": 2, "max_speed": 4},
+        "rito", "irão", "novo", "ágil", "bojo", "tese", "alva", "nada", "quer", "alta"], "min_speed": 1, "max_speed": 2},
 
     3: {"palavras":["sagaz", "âmago", "termo", "negro", "êxito", "mexer", "nobre", "senso", "afeto", "ética", "algoz", "plena", "fazer", "assim", "tênue", "mútua", "sobre", "aquém", "vigor", "seção", "poder", 
         "sutil", "porém", "fosse", "cerne", "ideia", "sanar", "audaz", "moral", "inato", "quiçá", "desde", "muito", "justo", "sonho", "honra", "torpe", "razão", "amigo", "ícone", "etnia", "égide",
         "fútil", "anexo", "dengo", "tange", "haver", "lapso", "então", "expor", "tempo", "boçal", "seara", "hábil", "mútuo", "saber", "casal", "graça", "ávido", "óbice", "xibiu", "dizer", "ardil", 
         "pesar", "estar", "dever", "causa", "sendo", "tenaz", "ainda", "pária", "brado", "coser", "crivo", "temor", "genro", "posse", "comum", "ápice", "prole", "ânimo", "assaz", "ceder", "corja", 
-        "pauta", "detém", "fugaz", "censo", "ânsia", "culto", "digno", "atroz", "mundo", "forte", "vulgo", "mesmo", "vício", "gleba", "saúde", "criar"], "min_speed": 2, "max_speed": 4},
+        "pauta", "detém", "fugaz", "censo", "ânsia", "culto", "digno", "atroz", "mundo", "forte", "vulgo", "mesmo", "vício", "gleba", "saúde", "criar"], "min_speed": 1, "max_speed": 2},
 
     4: {"palavras":["exceto", "cínico", "idôneo", "âmbito", "néscio", "mister", "índole", "vereda", "defina", "apogeu", "inócuo", "convém", "utopia", "escopo", "sádico", "ênfase", "idiota", "alusão", "mérito", 
         "casual", "hostil", "cético", "anseio", "legado", "gentil", "pressa", "hétero", "alheio", "paixão", "nocivo", "clichê", "infame", "exímio", "afável", "dádiva", "também", "adorno", "êxtase", 
         "larica", "otário", "sóbrio", "astuto", "aferir", "adesão", "glória", "sessão", "solene", "limiar", "julgar", "embora", "ensejo", "apreço", "hábito", "lábaro", "nuance", "formal", "ímpeto", 
         "eficaz", "outrem", "perene", "dispor", "júbilo", "ocioso", "alento", "difuso", "ilação", "escusa", "cessão", "exílio", "facção", "lúdico", "objeto", "acesso", "abster", "alçada", "desejo", 
         "mulher", "axioma", "acento", "buscar", "etéreo", "tácito", "quando", "sanção", "mazela", "cobiça", "penhor", "cortês", "isento", "sisudo", "eximir", "avidez", "prazer", "sempre", "vulgar", 
-        "receio", "remoto", "fático", "nômade", "rotina"], "min_speed": 2, "max_speed": 4},
+        "receio", "remoto", "fático", "nômade", "rotina"], "min_speed": 1, "max_speed": 2},
 
     5: {"palavras":["empatia", "aurélio", "cônjuge", "embuste", "exceção", "verbete", "caráter", "efêmero", "prolixo", "idílico", "família", "análogo", "genuíno", "sublime", "estória", "inferir", "pêsames", 
         "apático", "sucinto", "acepção", "redimir", "cultura", "pródigo", "astúcia", "estigma", "audácia", "recesso", "virtude", "icônico", "soberba", "mitigar", "refutar", "exortar", "cinismo", 
@@ -103,7 +103,7 @@ fases = {
          "prestatividade", "excentricidade", "epistemológico", "dissolutamente", "pusilanimidade", "inconveniência", "congratulações", "exequibilidade", "biodiversidade", "insubstituível", 
          "individualismo", "papibaquígrafo", "jurisprudência", "resplandecente", "disponibilizar", "abundantemente", "coercitividade", "acessibilidade", "plausibilidade", "exclusivamente", 
          "internalização", "constantemente", "perfeccionista", "credenciamento", "menção honrosa", "impressionante", "multiplicidade", "aleatoriamente", "questionamento", "esclarecimento",
-         "grandiloquente", "implicitamente", "permissividade", "minuciosamente", "frequentemente", "indiscriminado", "concessionária", "transfiguração", "sobrecarregado", "intermunicipal"], "min_speed": 2, "max_speed": 4},
+         "grandiloquente", "implicitamente", "permissividade", "minuciosamente", "frequentemente", "indiscriminado", "concessionária", "transfiguração", "sobrecarregado", "intermunicipal"], "min_speed": 3, "max_speed": 4},
 
     13: {"palavras":["condescendente", "cônjuge", "caráter", "cínico", "concessão", "corroborar", "condolências", "contemporâneo", "concepção", "complacente", "corolário", "complacência", "contundente", 
          "concupiscência", "conceito", "característica", "condescendência", "convém", "compreensão", "comorbidade", "cultura", "como", "confiança", "conserto", "circunstância", "caos", "consequência", 
@@ -111,5 +111,5 @@ fases = {
          "comunhão", "contexto", "concernente", "companhia", "candura", "cerne", "contencioso", "compassivo", "constante", "contemplar", "consideração", "coragem", "contudo", "consoante", "cumprimento", 
          "concomitante", "carência", "compreender", "conjuntura", "cognitivo", "convergência", "conhecimento", "ciência", "cordialidade", "coercitivo", "cumplicidade", "constância", "conciso", "colosso", 
          "concerto", "convencional", "cessão", "condição", "convicção", "contenda", "conceder", "casa", "canalha", "credibilidade", "coerente", "coincidência", "concomitantemente", "colapso", "caridade", 
-         "custódia", "conhecer", "conforme", "complexidade", "cuidado", "controvérsia", "consciência", "coerência", "contíguo", "conveniente", "cobiça", "casal", "cortês"], "min_speed": 10, "max_speed": 20}
+         "custódia", "conhecer", "conforme", "complexidade", "cuidado", "controvérsia", "consciência", "coerência", "contíguo", "conveniente", "cobiça", "casal", "cortês"], "min_speed": 3, "max_speed": 4}
 }

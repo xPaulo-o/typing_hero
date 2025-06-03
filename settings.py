@@ -112,6 +112,7 @@ GAME_OVER = pygame.transform.scale(GAME_OVER, (WIDTH, HEIGHT))
 IMG_MENU_BG = "img/img0.png"
 FASE_MENU_BG = pygame.image.load("img/menu.png")
 FASE_MENU_BG = pygame.transform.scale(FASE_MENU_BG, (WIDTH, HEIGHT))
+MUSIC_MENU_PATH = "sounds/menu_music.mp3"
 #VIDEO_INTRO_PATH = "videos/intro.mp4"
 
 
