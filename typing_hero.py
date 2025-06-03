@@ -85,7 +85,7 @@ def draw_game_over(final_score):
     font = pygame.font.SysFont(None, 48)
 
     # Posição
-    x = 500
+    x = 490
     y = 200
 
     draw_text_with_outline(
@@ -115,7 +115,7 @@ def draw_game_over(final_score):
         ]
 
         for rect, label in botoes:
-            cor = LIGHT_GRAY if rect.collidepoint(mouse_pos) else DARK_GRAY
+            cor = LIGHT_GRAY if rect.collidepoint(mouse_pos) else BLACK
             pygame.draw.rect(screen, cor, rect, border_radius=20)
 
             texto = font.render(label, True, WHITE)
@@ -325,7 +325,7 @@ def main_game():
                 word_bg = pygame.Surface((bg_rect.width, bg_rect.height), pygame.SRCALPHA)
 
                 # Desenha retângulo arredondado com fundo preto semi-transparente
-                pygame.draw.rect(word_bg, DARK_GRAY, word_bg.get_rect(), border_radius=12)
+                pygame.draw.rect(word_bg, BLACK, word_bg.get_rect(), border_radius=12)
 
                 # Desenha o texto por cima
                 word_bg.blit(text_surface, (padding // 2, padding // 2))
@@ -348,7 +348,7 @@ def main_game():
 
         # Cria superfície com fundo preto semi-transparente e bordas arredondadas
         input_bg = pygame.Surface((bg_width, bg_height), pygame.SRCALPHA)
-        pygame.draw.rect(input_bg, DARK_GRAY, input_bg.get_rect(), border_radius=16)
+        pygame.draw.rect(input_bg, BLACK, input_bg.get_rect(), border_radius=16)
         input_bg.blit(input_surface, (padding // 2, padding // 2))
 
         # Blita no centro da tela

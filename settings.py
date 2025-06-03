@@ -58,7 +58,7 @@ def load_gif_frames(path, size):
 
 def draw_text_with_outline(text, font, text_color, outline_color, bg_color, pos, screen):
     # Renderiza o texto principal
-    base = font.render(text, True, text_color, bg_color)
+    base = font.render(text, True, text_color)
 
     # Cria a borda em 8 direções
     outline = pygame.Surface((base.get_width() + 2, base.get_height() + 2), pygame.SRCALPHA)
@@ -71,13 +71,20 @@ def draw_text_with_outline(text, font, text_color, outline_color, bg_color, pos,
     # Coloca o texto principal por cima da borda
     outline.blit(base, (1, 1))
 
-    # Preenche o fundo (Light Gray)
-    bg_surface = pygame.Surface((outline.get_width(), outline.get_height()))
-    bg_surface.fill((50, 50, 50))  
-    bg_surface.blit(outline, (0, 0))
+    # Cria uma superfície com fundo transparente e desenha o fundo com bordas arredondadas
+    padding = 20
+    bg_width = outline.get_width() + padding
+    bg_height = outline.get_height() + padding
+    rounded_bg = pygame.Surface((bg_width, bg_height), pygame.SRCALPHA)
 
-    # Exibe na tela
-    screen.blit(bg_surface, pos)
+    # Fundo preto com 200 de opacidade e bordas arredondadas
+    pygame.draw.rect(rounded_bg, BLACK, (0, 0, bg_width, bg_height), border_radius=16)
+
+    # Desenha o texto com contorno no centro do fundo
+    rounded_bg.blit(outline, (padding // 2, padding // 2))
+
+    # Exibe tudo na tela
+    screen.blit(rounded_bg, pos)
 
 
 
@@ -125,12 +132,12 @@ SCREEN_HEIGHT = 1080
 # Cminhos de recursos
 IMG_PAUSE = pygame.image.load("img/pause_menu.png")
 IMG_PAUSE = pygame.transform.scale(IMG_PAUSE, (WIDTH, HEIGHT))
-GAME_OVER = pygame.image.load("img/game_over.png")
+GAME_OVER = pygame.image.load("img/game_over.jpeg")
 GAME_OVER = pygame.transform.scale(GAME_OVER, (WIDTH, HEIGHT))
 IMG_MENU_BG = "img/img0.png"
 FASE_MENU_BG = pygame.image.load("img/menu.png")
 FASE_MENU_BG = pygame.transform.scale(FASE_MENU_BG, (WIDTH, HEIGHT))
 MUSIC_MENU_PATH = "sounds/audio_menu.mp3"
 BUTTON_CLICK_SOUND_PATH = os.path.join("sounds", "click.ogg")
-ANIMATED_BG_FRAMES = load_gif_frames("videos/fundo_gameplay2.gif", (WIDTH, HEIGHT))
+ANIMATED_BG_FRAMES = load_gif_frames("videos/fundo_gameplay3.gif", (WIDTH, HEIGHT))
 ANIMATED_BG_FRAME_COUNT = len(ANIMATED_BG_FRAMES)
