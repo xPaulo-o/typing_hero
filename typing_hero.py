@@ -229,6 +229,12 @@ def main_game():
     # Variável para controlar se a velocidade já foi acelerada
     accelerated_speed = False
 
+    # Variáveis para controle do backspace contínuo
+    backspace_held = False
+    backspace_timer = 0
+    initial_backspace_delay = 300  # ms antes de começar a apagar continuamente
+    repeat_backspace_interval = 50 # ms entre cada apagada contínua
+
     # Carrega e toca a música da gameplay
     try:
         pygame.mixer.music.load(MUSIC_GAMEPLAY_PATH)
@@ -279,7 +285,10 @@ def main_game():
                         pygame.mixer.music.stop() # Para a música antes de voltar ao menu
                         return "menu"
                 elif event.key == pygame.K_BACKSPACE:
-                    input_text = input_text[:-1]
+                    if input_text: # Apaga um caractere imediatamente ao primeiro toque
+                        input_text = input_text[:-1]
+                    backspace_held = True
+                    backspace_timer = 0 # Reseta o timer ao pressionar
                 elif event.key == pygame.K_RETURN:
                     matched = False
                     for word in falling_words:
@@ -307,9 +316,22 @@ def main_game():
                         if event.unicode == "~": # Evita o caracter til solto
                             continue
                         input_text += event.unicode
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_BACKSPACE:
+                    backspace_held = False
             elif event.type == NEW_WORD_EVENT:
                 # Passa as velocidades que podem ter sido ajustadas
                 falling_words.append(new_word(word_list, current_min_speed, current_max_speed)) 
+
+        # Lógica para backspace contínuo
+        if backspace_held and input_text:
+            backspace_timer += clock.get_time()
+            if backspace_timer >= initial_backspace_delay:
+                if backspace_timer - initial_backspace_delay >= repeat_backspace_interval:
+                    input_text = input_text[:-1]
+                    backspace_timer = initial_backspace_delay 
+            if not input_text:
+                backspace_held = False
 
         # Atualiza posição e checa palavras que caíram
         for word in list(falling_words):
@@ -420,7 +442,6 @@ def main_game():
         clock.tick(60)
 
     return "menu" # Por garantia, se o loop 'running' terminar inesperadamente
-
 def draw_main_menu():
     screen.blit(IMG_MENU_BG, (0, 0))
 
