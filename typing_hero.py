@@ -476,16 +476,25 @@ def draw_level_selection_menu():
     global fase_atual, unlocked_fases, max_scores
     screen.blit(FASE_MENU_BG, (0, 0)) # Fundo do menu de fases
 
-    button_width = int(WIDTH * 0.10) # Botões mais estreitos
-    button_height = int(HEIGHT * 0.07) # Botões mais baixos
-    
-    start_x = WIDTH // 2.8 - button_width // 1
-    start_y = HEIGHT // 140
+  
+    white_area_x = WIDTH * 0.15  
+    white_area_y = HEIGHT * 0.18 
+    white_area_width = WIDTH * 0.15 
+    white_area_height = HEIGHT * 0.95
 
-    espacamento_y = button_height + 2.5 # Espaçamento vertical entre os botões
     
     button_width = 100   
-    button_height = 40  
+    button_height = 30  
+
+    
+    total_phases = len(fases)
+    espacamento_y = button_height + 5.0 
+
+    # Calcule as posições iniciais para centralizar os botões dentro da área branca
+    # Para centralizar horizontalmente os botões na área branca:
+    start_x = white_area_x + (white_area_width - button_width) // 2
+    # Ajuste start_y para colocar o primeiro botão com um pouco de padding do topo da área branca
+    start_y = white_area_y + 20 # 20 pixels de padding do topo da área branca
 
     # Botões de fase
     for i in range(1, len(fases) + 1): # Itera sobre todas as fases disponíveis
@@ -496,7 +505,7 @@ def draw_level_selection_menu():
         
         mouse_pos = pygame.mouse.get_pos()
         if is_unlocked:
-            button_color = LIGHT_GRAY if button_rect.collidepoint(mouse_pos) else DARK_GRAY
+            button_color = LIGHT_GRAY if button_rect.collidepoint(mouse_pos) else BLACK
         else:
             button_color = GRAY
         
@@ -505,14 +514,14 @@ def draw_level_selection_menu():
         pygame.draw.rect(screen, button_color, button_rect, border_radius=40) # Cantos levemente arredondados
         level_text = font.render(f"Fase {i}", True, text_color)
         screen.blit(level_text, (button_rect.centerx - level_text.get_width() // 2,
-                                  button_rect.centery - level_text.get_height() // 2 - font_size // 4)) # Ajustar Y para deixar espaço para o score
+                                  button_rect.centery - level_text.get_height() // 3 - font_size // 4)) # Ajustar Y para deixar espaço para o score
 
         # Exibir Score Máximo
         if str(i) in max_scores:
             score_display_text = f"PONTUAÇÂO MAXIMA: {max_scores[str(i)]}"
             score_surface = font.render(score_display_text, True, BLACK)
             screen.blit(score_surface, (
-                        button_rect.right + 280, 
+                        button_rect.right + 280, # Este deslocamento também pode precisar de ajuste
                         button_rect.centery - score_surface.get_height() // 2  # Centralizado verticalmente
                          ))
 
@@ -523,7 +532,7 @@ def draw_level_selection_menu():
     back_button_rect = pygame.Rect(WIDTH * 0.02, HEIGHT * 0.88, back_button_width, back_button_height) 
 
     mouse_pos = pygame.mouse.get_pos()
-    back_color = LIGHT_GRAY if back_button_rect.collidepoint(mouse_pos) else DARK_GRAY
+    back_color = LIGHT_GRAY if back_button_rect.collidepoint(mouse_pos) else BLACK
     pygame.draw.rect(screen, back_color, back_button_rect, border_radius=8)
     back_text = font.render("VOLTAR", True, WHITE) 
     screen.blit(back_text, (back_button_rect.centerx - back_text.get_width() // 2,
