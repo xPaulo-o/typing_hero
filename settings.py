@@ -34,7 +34,7 @@ WIDTH, HEIGHT = info.current_w, info.current_h
 FULLSCREEN_MODE = True
 
 
-WORD_SPAWN_INTERVAL_MS = 2000  # Muda a cada quanto tempo a palavra vai aparecer Exemplo: uma nova palavra a cada 2 segundos
+WORD_SPAWN_INTERVAL_MS = 3000  # Muda a cada quanto tempo a palavra vai aparecer Exemplo: uma nova palavra a cada 3 segundos
 WORD_INITIAL_Y_OFFSET = 50  
 
 

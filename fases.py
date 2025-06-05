@@ -37,7 +37,7 @@ fases = {
         "mórbido", "trivial", "estável", "aspecto", "sucesso", "síntese", "alegria", "luxúria", "cordial", "anátema", "imputar", "ademais", "emergir", "orgulho", "escória", "excerto", "candura", 
         "deboche", "através", "litígio", "almejar", "saudade", "coragem", "contudo", "amizade", "frívolo", "salutar", "escroto", "racismo", "oriundo", "ambíguo", "austero", "alcunha", "quimera", 
         "relação", "ambição", "imersão", "excesso", "erudito", "sensato", "ciência", "demanda", "modesto", "fomento", "piedade", "conciso", "colosso", "parcial", "exótico", "volátil", "notório",
-        "vigente", "híbrido", "bizarro", "padecer", "auferir", "hesitar", "profano", "leviano", "inércia", "ansioso", "sentido", "sórdido", "déspota", "ignóbil", "intenso"], "min_speed": 2, "max_speed": 4},
+        "vigente", "híbrido", "bizarro", "padecer", "auferir", "hesitar", "profano", "leviano", "inércia", "ansioso", "sentido", "sórdido", "déspota", "ignóbil", "intenso"], "min_speed": 2, "max_speed": 2},
 
     6: {"palavras":["inerente", "respeito", "peculiar", "denegrir", "genocida", "anuência", "equidade", "deferido", "prudente", "essência", "iminente", "pandemia", "desgraça", "misógino", "eminente", "premissa", 
         "invasivo", "abstrato", "alienado", "extensão", "empírico", "rapariga", "conceito", "ardiloso", "talarico", "ascensão", "reiterar", "devaneio", "lascívia", "prodígio", "relativo", "inefável", 
@@ -45,7 +45,7 @@ fases = {
         "história", "alicerce", "concerne", "respaldo", "proceder", "sinônimo", "perfídia", "portanto", "primazia", "complexo", "metódico", "espectro", "rechaçar", "paradoxo", "critério", "demagogo", 
         "amálgama", "consiste", "suscitar", "comunhão", "sucumbir", "distinto", "singular", "abnegado", "escárnio", "notívago", "desfecho", "contexto", "objetivo", "processo", "refletir", "vocábulo", 
         "problema", "elegível", "obstante", "impávido", "incrível", "redenção", "epifania", "maestria", "desígnio", "solícito", "mediante", "endêmico", "reflexão", "preceito", "jurídico", "instigar", 
-        "imanente", "insípido", "paralelo", "genérico"], "min_speed": 2, "max_speed": 4},
+        "imanente", "insípido", "paralelo", "genérico"], "min_speed": 2, "max_speed": 2},
 
     7: {"palavras":["perspicaz", "recíproco", "concessão", "impressão", "escrúpulo", "supérfluo", "retificar", "paradigma", "propósito", "dicotomia", "presunção", "concepção", "ratificar", "hipócrita", "plenitude", 
         "implícito", "essencial", "corolário", "hegemonia", "incidente", "esdrúxulo", "altruísmo", "altruísta", "vagabundo", "hermético", "esperança", "confiança", "aleatório", "promíscuo", "persuadir", 
@@ -53,7 +53,7 @@ fases = {
         "pretensão", "percepção", "ordinário", "explícito", "analítico", "exequível", "autonomia", "subjetivo", "nostalgia", "companhia", "resolução", "outrossim", "autóctone", "paciência", "fidedigno", 
         "dissensão", "supressão", "expressão", "desdenhar", "taciturno", "constante", "imparcial", "ignorante", "consoante", "autêntico", "arrogante", "desumilde", "execrável", "obstinado", "discorrer", 
         "jactância", "arcabouço", "eloquente", "restrição", "submissão", "interesse", "cognitivo", "adjacente", "instância", "limítrofe", "iminência", "sintético", "relevante", "presságio", "humildade", 
-        "liberdade", "empecilho", "excelente", "irascível", "ludibriar", "insensato", "plausível", "convicção", "primícias", "incógnita"], "min_speed": 2, "max_speed": 4},
+        "liberdade", "empecilho", "excelente", "irascível", "ludibriar", "insensato", "plausível", "convicção", "primícias", "incógnita"], "min_speed": 2, "max_speed": 2},
 
     8: {"palavras":["dicionário", "intrínseco", "prescindir", "presunçoso", "diligência", "corroborar", "intempérie", "detrimento", "parcimônia", "maturidade", "inspiração", "referência", "inexorável", "pragmático", 
         "prepotente", "incipiente", "disruptivo", "serenidade", "sororidade", "iniquidade", "auspicioso", "pertinente", "arbitrário", "indulgente", "hipocrisia", "sagacidade", "resignação", "preconizar", 
@@ -62,7 +62,7 @@ fases = {
         "sintetizar", "subjacente", "intrínseca", "primordial", "signatário", "conjuntura", "alteridade", "itinerário", "dissolução", "coercitivo", "no entanto", "finalidade", "esplêndido", "constância", 
         "necessário", "designação", "pecuniária", "espontâneo", "transeunte", "pusilânime", "disciplina", "felicidade", "sarcástico", "privilégio", "verossímil", "exacerbado", "pernóstico", "relevância", 
         "idoneidade", "desprovido", "inferência", "reverberar", "satisfação", "divergente", "pernicioso", "disseminar", "esporádico", "meticuloso", "influência", "retumbante", "fornicação", "resiliente", 
-        "consolidar", "etimologia"], "min_speed": 2, "max_speed": 4},
+        "consolidar", "etimologia"], "min_speed": 2, "max_speed": 2},
 
     9: {"palavras":["significado", "perspectiva", "resiliência", "dissimulado", "vicissitude", "complacente", "contundente", "peremptório", "compreensão", "comorbidade", "perspicácia", "expectativa", "pressuposto", 
         "subterfúgio", "beneplácito", "experiência", "preconceito", "consonância", "indiferente", "pretensioso", "transcender", "necessidade", "intensidade", "imensurável", "contingente", "proeminente", 
@@ -71,7 +71,7 @@ fases = {
         "divergência", "austeridade", "proveniente", "importância", "indubitável", "prognóstico", "tergiversar", "negligência", "estabelecer", "heterogêneo", "identificar", "displicente", "consciência", 
         "oportunista", "benevolente", "conveniente", "excepcional", "discriminar", "redundância", "congruência", "pragmatismo", "providência", "admoestação", "substantivo", "conferência", "comprimento", 
         "sistemático", "facultativo", "compulsório", "intersecção", "verborragia", "desenvolver", "melancólico", "dificuldade", "relativizar", "subordinado", "intelectual", "honestidade", "contradição", 
-        "substancial", "generalizar", "competência", "retificação", "emblemático", "amabilidade", "procedência", "conservador", "autoritário"], "min_speed": 2, "max_speed": 4},
+        "substancial", "generalizar", "competência", "retificação", "emblemático", "amabilidade", "procedência", "conservador", "autoritário"], "min_speed": 2, "max_speed": 3},
 
     10: {"palavras":["perseverança", "remanescente", "condolências", "prerrogativa", "extrovertido", "complacência", "procrastinar", "discrepância", "determinação", "independente", "consequência", "intermitente", 
          "conveniência", "compartilhar", "benevolência", "contingência", "eclesiástico", "transgressão", "consideração", "felicitações", "não obstante", "concomitante", "convergência", "conhecimento", 
@@ -81,7 +81,7 @@ fases = {
          "coexistência", "preeminência", "proeminência", "oportunidade", "protagonista", "complementar", "introvertido", "constituição", "parcialmente", "consolidação", "escarnecedor", "deslumbrante", 
          "entendimento", "destinatário", "consistência", "parcialidade", "interessante", "estigmatizar", "procedimento", "caracterizar", "generosidade", "incircunciso", "circuncidado", "condicionado", 
          "enclausurado", "prosperidade", "literalmente", "superestimar", "desenvoltura", "fragmentação", "proficiência", "profissional", "simplicidade", "depreciativo", "incolumidade", "legitimidade", 
-         "inescrutável", "beneficência", "sobremaneira", "predestinado"], "min_speed": 2, "max_speed": 4},
+         "inescrutável", "beneficência", "sobremaneira", "predestinado"], "min_speed": 2, "max_speed": 3},
 
     11: {"palavras":["reciprocidade", "contemporâneo", "inconveniente", "heterossexual", "circunstância", "discernimento", "solidariedade", "promiscuidade", "ressignificar", "intransigente", "credibilidade", 
          "discriminação", "epistemologia", "transcendente", "aprovisionado", "contrapartida", "assintomático", "incongruência", "comprobatório", "reminiscência", "perpendicular", "ressentimento", 
@@ -92,7 +92,7 @@ fases = {
          "indescritível", "integralmente", "magnificência", "provavelmente", "homogeneidade", "incondicional", "precipuamente", "peculiaridade", "circunscrição", "serendipidade", "consentimento", 
          "contentamento", "convalescente", "remanejamento", "consciencioso", "incandescente", "correlacionar", "predisposição", "versatilidade", "conscientizar", "arrefecimento", "desnecessário", 
          "irresponsável", "supersticioso", "identificação", "representação", "indeterminado", "imperceptível", "incognoscível", "reconciliação", "especificação", "monocromático", "receptividade", 
-         "ressarcimento"], "min_speed": 2, "max_speed": 4},
+         "ressarcimento"], "min_speed": 2, "max_speed": 3},
 
     12: {"palavras":["imprescindível", "condescendente", "idiossincrasia", "concupiscência", "característica", "extraordinário", "demasiadamente", "intercorrência", "irrepreensível", "pronta-entrega", 
          "consubstanciar", "incomensurável", "discricionário", "preponderância", "arbitrariedade", "especificidade", "posteriormente", "imprescritível", "intransponível", "contextualizar", 
@@ -103,7 +103,7 @@ fases = {
          "prestatividade", "excentricidade", "epistemológico", "dissolutamente", "pusilanimidade", "inconveniência", "congratulações", "exequibilidade", "biodiversidade", "insubstituível", 
          "individualismo", "papibaquígrafo", "jurisprudência", "resplandecente", "disponibilizar", "abundantemente", "coercitividade", "acessibilidade", "plausibilidade", "exclusivamente", 
          "internalização", "constantemente", "perfeccionista", "credenciamento", "menção honrosa", "impressionante", "multiplicidade", "aleatoriamente", "questionamento", "esclarecimento",
-         "grandiloquente", "implicitamente", "permissividade", "minuciosamente", "frequentemente", "indiscriminado", "concessionária", "transfiguração", "sobrecarregado", "intermunicipal"], "min_speed": 3, "max_speed": 4},
+         "grandiloquente", "implicitamente", "permissividade", "minuciosamente", "frequentemente", "indiscriminado", "concessionária", "transfiguração", "sobrecarregado", "intermunicipal"], "min_speed": 3, "max_speed": 3},
 
     13: {"palavras":["condescendente", "cônjuge", "caráter", "cínico", "concessão", "corroborar", "condolências", "contemporâneo", "concepção", "complacente", "corolário", "complacência", "contundente", 
          "concupiscência", "conceito", "característica", "condescendência", "convém", "compreensão", "comorbidade", "cultura", "como", "confiança", "conserto", "circunstância", "caos", "consequência", 
