@@ -9,6 +9,11 @@ from gamedata import load_game_data, save_game_data # Importa as funções de sa
 pygame.init()
 pygame.mixer.init()
 
+frame_index = 0
+frame_timer = 0
+FRAME_DURATION = 100 
+
+
 try:
     BUTTON_CLICK_SOUND = pygame.mixer.Sound(BUTTON_CLICK_SOUND_PATH)
 except pygame.error as e:
@@ -33,7 +38,6 @@ logo_width = int(WIDTH * 0.5)
 logo_height = int(logo_width * 0.625)
 
 # Carrega e redimensiona as imagens definidas no settings.py
-IMG_MENU_BG = pygame.transform.scale(pygame.image.load(IMG_MENU_BG), (WIDTH, HEIGHT))
 
 
 game_data = load_game_data()
@@ -426,54 +430,68 @@ def main_game():
         clock.tick(60)
 
     return "menu" # Por garantia, se o loop 'running' terminar inesperadamente
+
 def draw_main_menu():
-    screen.blit(IMG_MENU_BG, (0, 0))
+    global frame_timer, frame_index 
 
-    # Define o tamanho dos botões com base na resolução da tela
-    button_width = int(WIDTH * 0.25)
-    button_height = int(HEIGHT * 0.08)
+    running = True
+    while running:
+        frame_timer += clock.get_time()
+        if frame_timer >= FRAME_DURATION:
+            frame_timer = 0
+            frame_index = (frame_index + 1) % IMG_MENU_BG_FRAME_COUNT
 
-    play_button_x = WIDTH // 1.2 - button_width // 1
-    play_button_y = int(HEIGHT * 0.60)  # Botão JOGAR 
+        screen.blit(IMG_MENU_BG[frame_index], (0, 0))
 
-    exit_button_x = WIDTH // 1.2 - button_width // 1
-    exit_button_y = int(HEIGHT * 0.73)  # Botão SAIR 
 
-    play_button_rect = pygame.Rect(play_button_x, play_button_y, button_width, button_height)
-    exit_button_rect = pygame.Rect(exit_button_x, exit_button_y, button_width, button_height)
+        button_width = int(WIDTH * 0.25)
+        button_height = int(HEIGHT * 0.08)
 
-    mouse_pos = pygame.mouse.get_pos()
+        play_button_x = WIDTH // 1.64 - button_width // 1
+        play_button_y = int(HEIGHT * 0.60)  # Botão JOGAR 
 
-    # Botão JOGAR
-    play_color = LIGHT_GRAY if play_button_rect.collidepoint(mouse_pos) else DARK_GRAY
-    pygame.draw.rect(screen, play_color, play_button_rect, border_radius=20)
-    play_text = font.render("JOGAR", True, WHITE)
-    screen.blit(play_text, (play_button_rect.centerx - play_text.get_width() // 2,
-                            play_button_rect.centery - play_text.get_height() // 2))
+        exit_button_x = WIDTH // 1.64 - button_width // 1
+        exit_button_y = int(HEIGHT * 0.73)  # Botão SAIR 
 
-    # Botão SAIR
-    exit_color = RED_LIGHT if exit_button_rect.collidepoint(mouse_pos) else RED_DARK
-    pygame.draw.rect(screen, exit_color, exit_button_rect, border_radius=20)
-    exit_text = font.render("SAIR", True, WHITE)
-    screen.blit(exit_text, (exit_button_rect.centerx - exit_text.get_width() // 2,
-                            exit_button_rect.centery - exit_text.get_height() // 2))
+        play_button_rect = pygame.Rect(play_button_x, play_button_y, button_width, button_height)
+        exit_button_rect = pygame.Rect(exit_button_x, exit_button_y, button_width, button_height)
 
-    pygame.display.flip()
+        mouse_pos = pygame.mouse.get_pos()
 
-    for event in pygame.event.get(): 
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if play_button_rect.collidepoint(event.pos):
-                play_button_click_sound() 
-                return "levels"  # Vai para o menu de seleção de fases
-            if exit_button_rect.collidepoint(event.pos):
-                play_button_click_sound() 
+        # Botão JOGAR
+        play_color = LIGHT_GRAY if play_button_rect.collidepoint(mouse_pos) else DARK_GRAY
+        pygame.draw.rect(screen, play_color, play_button_rect, border_radius=20)
+        play_text = font.render("JOGAR", True, WHITE)
+        screen.blit(play_text, (play_button_rect.centerx - play_text.get_width() // 2,
+                                play_button_rect.centery - play_text.get_height() // 2))
+
+        # Botão SAIR
+        exit_color = RED_LIGHT if exit_button_rect.collidepoint(mouse_pos) else RED_DARK
+        pygame.draw.rect(screen, exit_color, exit_button_rect, border_radius=20)
+        exit_text = font.render("SAIR", True, WHITE)
+        screen.blit(exit_text, (exit_button_rect.centerx - exit_text.get_width() // 2,
+                                exit_button_rect.centery - exit_text.get_height() // 2))
+
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-    return "menu"
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # ... (lógica dos botões de Play e Exit)
+                if play_button_rect.collidepoint(event.pos):
+                    play_button_click_sound()
+                    return "levels" # Sai do loop e muda o estado
+                if exit_button_rect.collidepoint(event.pos):
+                    play_button_click_sound()
+                    pygame.quit()
+                    sys.exit()
 
+        clock.tick(60) 
+
+                
+    return "menu"
 
 
 def draw_level_selection_menu():
@@ -569,26 +587,24 @@ def draw_level_selection_menu():
 def run_game():
     current_state = "menu"
 
-    play_menu_music() 
-
     while True:
         if current_state == "menu":
-            if not pygame.mixer.music.get_busy(): 
+            if not pygame.mixer.music.get_busy():
                 play_menu_music()
             current_state = draw_main_menu()
         elif current_state == "game":
             if pygame.mixer.music.get_busy():
-                pygame.mixer.music.stop() 
+                pygame.mixer.music.stop()
             returned_state = main_game()
             if returned_state == "menu":
                 current_state = "menu"
             elif returned_state == "restart":
                 current_state = "game"
             else:
-                current_state = returned_state 
+                current_state = returned_state
         elif current_state == "levels":
             current_state = draw_level_selection_menu()
-        elif current_state == "restart": 
+        elif current_state == "restart":
             current_state = "game"
         else:
             pygame.quit()
