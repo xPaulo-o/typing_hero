@@ -3,6 +3,8 @@ import pygame
 import os
 from PIL import Image
 
+pygame.init()
+
 #cores
 WHITE = (255, 255, 255)
 DARK_GRAY = (50, 50, 50)
@@ -23,9 +25,6 @@ YELLOW = (255, 255, 0)
 BLUE_LIGHT = (173, 216, 230)
 GREEN_LIGHT = (144, 238, 144)
 
-import pygame
-
-pygame.init()
 
 # Detecta a resolução atual da tela
 info = pygame.display.Info()
@@ -35,11 +34,11 @@ WIDTH, HEIGHT = info.current_w, info.current_h
 FULLSCREEN_MODE = True
 
 
-WORD_SPAWN_INTERVAL_MS = 2000  # Exemplo: uma nova palavra a cada 2 segundos
-WORD_INITIAL_Y_OFFSET = 50  # Ajuste este valor conforme a necessidade
+WORD_SPAWN_INTERVAL_MS = 2000  # Muda a cada quanto tempo a palavra vai aparecer Exemplo: uma nova palavra a cada 2 segundos
+WORD_INITIAL_Y_OFFSET = 50  
 
 
-def draw_button(surface, rect, text, color, hover_color, button_font): # AGORA TEM 6 ARGUMENTOS
+def draw_button(surface, rect, text, color, hover_color, button_font):
     mouse_pos = pygame.mouse.get_pos()
     
     if rect.collidepoint(mouse_pos):
@@ -47,7 +46,7 @@ def draw_button(surface, rect, text, color, hover_color, button_font): # AGORA T
     else:
         pygame.draw.rect(surface, color, rect, border_radius=12)
 
-    text_surface = button_font.render(text, True, (255, 255, 255)) # Use button_font.render
+    text_surface = button_font.render(text, True, (255, 255, 255))
     text_rect = text_surface.get_rect(center=rect.center)
     surface.blit(text_surface, text_rect)
 
@@ -63,7 +62,7 @@ def load_gif_frames(path, size):
             frames.append(pygame_img)
             pil_img.seek(pil_img.tell() + 1)
     except EOFError:
-        pass  # acabou os frames
+        pass  
 
     return frames
 
@@ -72,30 +71,23 @@ def draw_text_with_outline(text, font, text_color, outline_color, bg_color, pos,
     # Renderiza o texto principal
     base = font.render(text, True, text_color)
 
-    # Cria a borda em 8 direções
     outline = pygame.Surface((base.get_width() + 2, base.get_height() + 2), pygame.SRCALPHA)
     for dx in [-1, 0, 1]:
         for dy in [-1, 0, 1]:
             if dx != 0 or dy != 0:
                 offset = font.render(text, True, outline_color)
                 outline.blit(offset, (1 + dx, 1 + dy))
-
-    # Coloca o texto principal por cima da borda
     outline.blit(base, (1, 1))
 
-    # Cria uma superfície com fundo transparente e desenha o fundo com bordas arredondadas
     padding = 20
     bg_width = outline.get_width() + padding
     bg_height = outline.get_height() + padding
     rounded_bg = pygame.Surface((bg_width, bg_height), pygame.SRCALPHA)
 
-    # Fundo preto com 200 de opacidade e bordas arredondadas
     pygame.draw.rect(rounded_bg, BLACK, (0, 0, bg_width, bg_height), border_radius=16)
 
-    # Desenha o texto com contorno no centro do fundo
     rounded_bg.blit(outline, (padding // 2, padding // 2))
 
-    # Exibe tudo na tela
     screen.blit(rounded_bg, pos)
 
 
@@ -144,7 +136,7 @@ SCREEN_HEIGHT = 1080
 # Tempo em milissegundos para a música atingir o ponto de aceleração
 MUSIC_ACCELERATION_TIME_MS = 126600 # Exemplo: 60 segundos (60000 ms)
 
-# Cminhos de recursos
+# recursos
 IMG_PAUSE = pygame.image.load("img/pause_menu2.png")
 IMG_PAUSE = pygame.transform.scale(IMG_PAUSE, (WIDTH, HEIGHT))
 GAME_OVER = pygame.image.load("img/game_over.jpeg")
