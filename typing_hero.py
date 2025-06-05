@@ -54,7 +54,7 @@ except pygame.error as e:
 def play_menu_music():
     try:
         pygame.mixer.music.load(MUSIC_MENU_PATH)
-        pygame.mixer.music.play(-1) # -1 para loop infinito
+        pygame.mixer.music.play(-1)
     except pygame.error as e:
         print(f"Erro ao carregar ou tocar música do menu: {e}")
 
@@ -233,7 +233,7 @@ def main_game():
     # Carrega e toca a música da gameplay
     try:
         pygame.mixer.music.load(MUSIC_GAMEPLAY_PATH)
-        pygame.mixer.music.play(-1) # -1 para loop infinito
+        pygame.mixer.music.play()
     except pygame.error as e:
         print(f"Erro ao carregar ou tocar música da gameplay: {e}")
 
@@ -429,7 +429,93 @@ def main_game():
         pygame.display.flip()
         clock.tick(60)
 
+        if not pygame.mixer.music.get_busy():
+            pygame.time.wait(1000) 
+            if score > max_scores.get(str(fase_atual), 0):
+                max_scores[str(fase_atual)] = score
+                game_data["max_scores"] = max_scores
+                save_game_data(game_data)
+
+            if score > 0 and (fase_atual + 1) in fases and (fase_atual + 1) not in unlocked_fases:
+                unlocked_fases.append(fase_atual + 1)
+                unlocked_fases.sort()
+                game_data["unlocked_fases"] = unlocked_fases
+                save_game_data(game_data)
+
+            pygame.mixer.music.stop()
+            return draw_fase_concluida(score)
+
+
     return "menu" # Por garantia, se o loop 'running' terminar inesperadamente
+
+def draw_fase_concluida(score):
+    frame_index = 0
+    frame_timer = 0
+    FRAME_DURATION = 100  
+
+    font = pygame.font.SysFont(None, 48)
+    texto = f"Fase Concluída! Pontuação: {score}"
+
+    continuar_rect = pygame.Rect(500, 250, 300, 60)
+    reiniciar_rect = pygame.Rect(500, 360, 300, 60)
+    menu_rect = pygame.Rect(500, 470, 300, 60)
+
+    while True:
+        frame_timer += clock.get_time()
+        if frame_timer >= FRAME_DURATION:
+            frame_timer = 0
+            frame_index = (frame_index + 1) % VICTORY_FRAME_COUNT
+
+        screen.blit(VICTORY_FRAMES[frame_index], (0, 0))
+
+        draw_text_with_outline(
+            texto,
+            font,
+            text_color=WHITE,
+            outline_color=BLACK,
+            bg_color=None,
+            pos=(400, 150),
+            screen=screen
+        )
+
+        # Botões
+        mouse_pos = pygame.mouse.get_pos()
+        botoes = [
+            (continuar_rect, "Selecionar Fase"),
+            (reiniciar_rect, "Reiniciar Fase"),
+            (menu_rect, "Menu Principal")
+        ]
+
+        for rect, label in botoes:
+            cor = LIGHT_GRAY if rect.collidepoint(mouse_pos) else BLACK
+            pygame.draw.rect(screen, cor, rect, border_radius=20)
+            texto_botao = font.render(label, True, WHITE)
+            screen.blit(
+                texto_botao,
+                (
+                    rect.centerx - texto_botao.get_width() // 2,
+                    rect.centery - texto_botao.get_height() // 2
+                )
+            )
+
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if continuar_rect.collidepoint(event.pos):
+                        play_button_click_sound()
+                        return "levels"
+                    elif reiniciar_rect.collidepoint(event.pos):
+                        play_button_click_sound()
+                        return "restart"
+                    elif menu_rect.collidepoint(event.pos):
+                        play_button_click_sound()
+                        return "menu"
 
 def draw_main_menu():
     global frame_timer, frame_index 

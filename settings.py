@@ -150,4 +150,6 @@ MUSIC_MENU_PATH = "sounds/audio_menu.mp3"
 BUTTON_CLICK_SOUND_PATH = os.path.join("sounds", "click.ogg")
 ANIMATED_BG_FRAMES = load_gif_frames("videos/fundo_gameplay3.gif", (WIDTH, HEIGHT))
 ANIMATED_BG_FRAME_COUNT = len(ANIMATED_BG_FRAMES)
+VICTORY_FRAMES = load_gif_frames("img/win_screen.gif", (WIDTH, HEIGHT))
+VICTORY_FRAME_COUNT = len(VICTORY_FRAMES)
 MUSIC_GAMEPLAY_PATH = "sounds/gameplay_music.mp3"
