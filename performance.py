@@ -121,3 +121,5 @@ text_cache = TextCache()
 # Instância global do monitor de performance
 performance_monitor = PerformanceMonitor()
 
+
+

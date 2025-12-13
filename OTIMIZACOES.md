@@ -96,3 +96,5 @@ O jogo detecta automaticamente:
 - O monitor de performance ajusta qualidade gradualmente (não abruptamente)
 - Todas as otimizações são retrocompatíveis (não quebram código existente)
 
+
+
