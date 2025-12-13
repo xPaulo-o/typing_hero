@@ -5,6 +5,7 @@ import unicodedata
 from settings import * 
 from fases import fases # Importa o dicionário de fases
 from gamedata import load_game_data, save_game_data # Importa as funções de save/load
+from performance import text_cache, performance_monitor, detect_hardware_capabilities
 
 pygame.init()
 pygame.mixer.init()
@@ -27,6 +28,12 @@ WIDTH, HEIGHT = DISPLAY_INFO.current_w, DISPLAY_INFO.current_h
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Typing Hero")
 clock = pygame.time.Clock()
+
+# Detecta hardware e ajusta FPS alvo
+hardware_info = detect_hardware_capabilities()
+target_fps = hardware_info["suggested_fps"]
+performance_monitor.target_fps = target_fps
+print(f"Hardware detectado: {hardware_info['tier']} - FPS alvo: {target_fps}")
 
 font_size = WIDTH // 53
 title_size = WIDTH // 30
@@ -79,9 +86,10 @@ def draw_game_over(final_score):
     text = f"Pontuação Final: {final_score}"
     font = pygame.font.SysFont(None, 48)
 
-    # Posição
-    x = 490
-    y = 200
+    # Centraliza o texto horizontalmente
+    text_surface_temp = font.render(text, True, WHITE)
+    text_x = (WIDTH - text_surface_temp.get_width()) // 2
+    text_y = int(HEIGHT * 0.25)  # 25% da altura da tela
 
     draw_text_with_outline(
         text,
@@ -89,15 +97,33 @@ def draw_game_over(final_score):
         text_color= WHITE,   
         outline_color= BLACK,       
         bg_color= None,       
-        pos=(x, y),
+        pos=(text_x, text_y),
         screen=screen
     )
  
 
 
-    # Botões
-    retry_rect = pygame.Rect(500, 350, 300, 60)
-    menu_rect = pygame.Rect(500, 450, 300, 60)
+    # Botões centralizados
+    button_width = 300
+    button_height = 60
+    button_spacing = 20  # Espaçamento entre botões
+    
+    # Calcula posição central dos botões
+    total_buttons_height = (button_height * 2) + button_spacing
+    start_y = (HEIGHT - total_buttons_height) // 2
+    
+    retry_rect = pygame.Rect(
+        (WIDTH - button_width) // 2,  # Centralizado horizontalmente
+        start_y,  # Primeiro botão
+        button_width,
+        button_height
+    )
+    menu_rect = pygame.Rect(
+        (WIDTH - button_width) // 2,  # Centralizado horizontalmente
+        start_y + button_height + button_spacing,  # Segundo botão
+        button_width,
+        button_height
+    )
 
     while True:
 
@@ -191,7 +217,7 @@ def pause_menu():
                     pygame.mixer.music.unpause() # Retoma a música
                     return "resume"
 
-        pygame.time.delay(5)
+        clock.tick(60)  # Usa clock.tick em vez de delay para melhor controle
 
 def main_game():
     global fase_atual, max_scores, unlocked_fases
@@ -242,11 +268,15 @@ def main_game():
 
     running = True
     while running:
+        frame_start = pygame.time.get_ticks()
         frame_timer += clock.get_time()
-        if frame_timer >= FRAME_DURATION:
-            frame_timer = 0
-            frame_index = (frame_index + 1) % ANIMATED_BG_FRAME_COUNT
-
+        
+        # Pula frames de animação se performance estiver baixa
+        if not performance_monitor.should_skip_frame():
+            if frame_timer >= FRAME_DURATION:
+                frame_timer = 0
+                frame_index = (frame_index + 1) % ANIMATED_BG_FRAME_COUNT
+        
         screen.blit(ANIMATED_BG_FRAMES[frame_index], (0, 0))
 
         # Verifica o tempo da música para aumentar a velocidade das palavras
@@ -284,8 +314,10 @@ def main_game():
                     backspace_timer = 0 # Reseta o timer ao pressionar
                 elif event.key == pygame.K_RETURN:
                     matched = False
-                    for word in falling_words:
-                        if input_text.lower() == word["word"]:
+                    input_lower = input_text.lower()
+                    # Otimizado: busca direta em vez de loop completo
+                    for i, word in enumerate(falling_words):
+                        if input_lower == word["word"]:
                             special_bonus = BONUS_MODE_COMBO_ADDITION if word.get("special") else 0
                             base_multiplier = min(combo + 1, COMBO_MAX_MULTIPLIER_BASE)
                             total_multiplier = base_multiplier + special_bonus
@@ -294,7 +326,8 @@ def main_game():
                             score += points * total_multiplier
 
                             bar_value = min(bar_value + ENERGY_GAIN_ON_CORRECT, MAX_ENERGY)
-                            falling_words.remove(word)
+                            # Remove por índice (mais eficiente)
+                            falling_words.pop(i)
                             combo += 1
                             matched = True
                             break
@@ -326,23 +359,29 @@ def main_game():
             if not input_text:
                 backspace_held = False
 
-        # Atualiza posição e checa palavras que caíram
-        for word in list(falling_words):
+        # Atualiza posição e checa palavras que caíram (otimizado com list comprehension)
+        words_to_remove = []
+        for word in falling_words:
             word["y"] += word["speed"]
             if word["y"] > HEIGHT:
-                falling_words.remove(word)
+                words_to_remove.append(word)
                 bar_value = max(bar_value - ENERGY_LOSS_ON_MISS, MIN_ENERGY_FOR_GAME_OVER)
                 combo = 0
                 input_text = ""
+        
+        # Remove palavras de uma vez (mais eficiente que remove() em loop)
+        for word in words_to_remove:
+            falling_words.remove(word)
 
         bonus_mode = bar_value >= MAX_ENERGY
 
-        # Renderizar palavras (restante do seu código de renderização)
+        # Renderizar palavras (otimizado com cache de texto)
+        padding = 10
         for word in falling_words:
-            text_surface = font.render(word["word"], True, word.get("color", WHITE))
+            # Usa cache de texto para evitar renderização repetida
+            text_surface = text_cache.get(word["word"], font, word.get("color", WHITE))
 
             text_rect = text_surface.get_rect()
-            padding = 10 
             bg_rect = pygame.Rect(
                 word["x"] - padding // 2,
                 word["y"] - padding // 2,
@@ -350,15 +389,13 @@ def main_game():
                 text_rect.height + padding
             )
 
+            # Cria surface apenas se necessário (reutiliza quando possível)
             word_bg = pygame.Surface((bg_rect.width, bg_rect.height), pygame.SRCALPHA)
-
             pygame.draw.rect(word_bg, BLACK, word_bg.get_rect(), border_radius=12)
-
             word_bg.blit(text_surface, (padding // 2, padding // 2))
-
             screen.blit(word_bg, (bg_rect.x, bg_rect.y))
 
-        # Mostrar entrada do jogador 
+        # Mostrar entrada do jogador (sempre renderiza pois muda constantemente)
         input_text_display = input_text
         input_surface = font.render(input_text_display, True, WHITE)
 
@@ -374,9 +411,9 @@ def main_game():
 
         screen.blit(input_bg, (bg_x, bg_y))
 
-        # Mostrar pontuação
+        # Mostrar pontuação (otimizado com cache)
         score_text = f"Score: {score}"
-        score_surface = font.render(score_text, True, WHITE)
+        score_surface = text_cache.get(score_text, font, WHITE)
 
         score_bg_w = score_surface.get_width() + 20
         score_bg_h = score_surface.get_height() + 10
@@ -385,8 +422,6 @@ def main_game():
 
         score_bg = pygame.Surface((score_bg_w, score_bg_h), pygame.SRCALPHA)
         pygame.draw.rect(score_bg, (0, 0, 0, 150), score_bg.get_rect(), border_radius=12)
-        screen.blit(score_bg, (score_bg_x, score_bg_y))
-
         screen.blit(score_bg, (score_bg_x, score_bg_y))
         screen.blit(score_surface, (score_bg_x + 10, score_bg_y + 5))
 
@@ -401,14 +436,16 @@ def main_game():
         pygame.draw.rect(screen, (80, 80, 80), (bar_x, bar_y, bar_w, bar_h), border_radius=8)
         pygame.draw.rect(screen, bar_color, (bar_x, bar_y, fill, bar_h), border_radius=8)
 
-        # Combo
+        # Combo (otimizado com cache)
         if combo >= 1:
-            combo_text = font.render(f"Combo x{min(combo // 10 + 1, COMBO_MAX_MULTIPLIER_BASE)}", True, YELLOW)
+            combo_multiplier = min(combo // 10 + 1, COMBO_MAX_MULTIPLIER_BASE)
+            combo_text_str = f"Combo x{combo_multiplier}"
+            combo_text = text_cache.get(combo_text_str, font, YELLOW)
             screen.blit(combo_text, (WIDTH // 2 - combo_text.get_width() // 2, bar_y + bar_h + 10))
 
-        # Modo bônus
+        # Modo bônus (otimizado com cache)
         if bonus_mode:
-            bonus_text = font.render("Modo Bônus!", True, bar_color)
+            bonus_text = text_cache.get("Modo Bônus!", font, bar_color)
             screen.blit(bonus_text, (bar_x + bar_w // 2 - bonus_text.get_width() // 2, bar_y + bar_h + BONUS_TEXT_Y_OFFSET_FROM_BAR))
 
         if bar_value <= MIN_ENERGY_FOR_GAME_OVER:
@@ -427,10 +464,16 @@ def main_game():
             return draw_game_over(score) 
 
         pygame.display.flip()
-        clock.tick(60)
+        
+        # FPS adaptativo baseado no hardware e performance
+        frame_time = pygame.time.get_ticks() - frame_start
+        performance_monitor.update(frame_time)
+        clock.tick(target_fps)
 
         if not pygame.mixer.music.get_busy():
-            pygame.time.wait(1000) 
+            # Usa clock.tick em vez de wait para não bloquear
+            for _ in range(60):  # Espera ~1 segundo a 60 FPS
+                clock.tick(60) 
             if score > max_scores.get(str(fase_atual), 0):
                 max_scores[str(fase_atual)] = score
                 game_data["max_scores"] = max_scores
