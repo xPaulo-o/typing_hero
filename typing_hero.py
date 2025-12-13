@@ -601,6 +601,14 @@ def draw_main_menu():
         screen.blit(exit_text, (exit_button_rect.centerx - exit_text.get_width() // 2,
                                 exit_button_rect.centery - exit_text.get_height() // 2))
 
+        # Copyright no canto inferior direito
+        copyright_text = "© 2024 paulo augusto"
+        copyright_font = pygame.font.SysFont("Arial", max(12, WIDTH // 100))  # Fonte menor e responsiva
+        copyright_surface = copyright_font.render(copyright_text, True, WHITE)
+        copyright_x = WIDTH - copyright_surface.get_width() - 10  # 10 pixels da borda direita
+        copyright_y = HEIGHT - copyright_surface.get_height() - 10  # 10 pixels da borda inferior
+        screen.blit(copyright_surface, (copyright_x, copyright_y))
+
         pygame.display.flip()
 
         for event in pygame.event.get():
