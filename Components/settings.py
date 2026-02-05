@@ -5,6 +5,9 @@ from PIL import Image
 
 pygame.init()
 
+# Diretório base do projeto (um nível acima de Components/)
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 #cores
 WHITE = (255, 255, 255)
 DARK_GRAY = (50, 50, 50)
@@ -119,8 +122,6 @@ ORANGE = (255, 165, 0)
 YELLOW = (255, 255, 0)                # Cor do texto de combo
 
 # UI
-PLAYER_INPUT_X_RATIO = 0.02
-PLAYER_INPUT_Y_RATIO = 0.93
 SCORE_DISPLAY_X_RATIO = 0.02
 SCORE_DISPLAY_Y_RATIO = 0.03
 ENERGY_BAR_WIDTH_RATIO = 0.3
@@ -130,25 +131,22 @@ ENERGY_BAR_Y_RATIO = 0.03
 BONUS_TEXT_Y_OFFSET_FROM_BAR = 10
 
 
-SCREEN_WIDTH = 1920 
-SCREEN_HEIGHT = 1080
-
 # Tempo em milissegundos para a música atingir o ponto de aceleração
 MUSIC_ACCELERATION_TIME_MS = 126600 # Exemplo: 60 segundos (60000 ms)
 
 # recursos
-IMG_PAUSE = pygame.image.load("img/pause_menu2.png")
+IMG_PAUSE = pygame.image.load(os.path.join(PROJECT_DIR, "img", "pause_menu2.png"))
 IMG_PAUSE = pygame.transform.scale(IMG_PAUSE, (WIDTH, HEIGHT))
-GAME_OVER = pygame.image.load("img/game_over.jpeg")
+GAME_OVER = pygame.image.load(os.path.join(PROJECT_DIR, "img", "game_over.jpeg"))
 GAME_OVER = pygame.transform.scale(GAME_OVER, (WIDTH, HEIGHT))
-IMG_MENU_BG = load_gif_frames("img/menu_typing.gif", (WIDTH, HEIGHT))
+IMG_MENU_BG = load_gif_frames(os.path.join(PROJECT_DIR, "img", "menu_typing.gif"), (WIDTH, HEIGHT))
 IMG_MENU_BG_FRAME_COUNT = len(IMG_MENU_BG) 
-FASE_MENU_BG = pygame.image.load("img/fase_menu.png")
+FASE_MENU_BG = pygame.image.load(os.path.join(PROJECT_DIR, "img", "fase_menu.png"))
 FASE_MENU_BG = pygame.transform.scale(FASE_MENU_BG, (WIDTH, HEIGHT))
-MUSIC_MENU_PATH = "sounds/audio_menu.mp3"
-BUTTON_CLICK_SOUND_PATH = os.path.join("sounds", "click.ogg")
-ANIMATED_BG_FRAMES = load_gif_frames("videos/fundo_gameplay3.gif", (WIDTH, HEIGHT))
+MUSIC_MENU_PATH = os.path.join(PROJECT_DIR, "sounds", "audio_menu.mp3")
+BUTTON_CLICK_SOUND_PATH = os.path.join(PROJECT_DIR, "sounds", "click.ogg")
+ANIMATED_BG_FRAMES = load_gif_frames(os.path.join(PROJECT_DIR, "videos", "fundo_gameplay3.gif"), (WIDTH, HEIGHT))
 ANIMATED_BG_FRAME_COUNT = len(ANIMATED_BG_FRAMES)
-VICTORY_FRAMES = load_gif_frames("img/win_screen.gif", (WIDTH, HEIGHT))
+VICTORY_FRAMES = load_gif_frames(os.path.join(PROJECT_DIR, "img", "win_screen.gif"), (WIDTH, HEIGHT))
 VICTORY_FRAME_COUNT = len(VICTORY_FRAMES)
-MUSIC_GAMEPLAY_PATH = "sounds/gameplay_music.mp3"
+MUSIC_GAMEPLAY_PATH = os.path.join(PROJECT_DIR, "sounds", "gameplay_music.mp3")

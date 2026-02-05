@@ -5,7 +5,6 @@ Inclui cache de renderização, detecção de hardware e FPS adaptativo
 
 import pygame
 import time
-from functools import lru_cache
 from typing import Dict, Tuple, Optional
 
 class TextCache:

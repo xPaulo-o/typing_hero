@@ -8,11 +8,7 @@ from gamedata import load_game_data, save_game_data # Importa as funções de sa
 from performance import text_cache, performance_monitor, detect_hardware_capabilities
 
 pygame.init()
-pygame.mixer.init()
-
-frame_index = 0
-frame_timer = 0
-FRAME_DURATION = 100 
+pygame.mixer.init() 
 
 
 try:
@@ -36,16 +32,7 @@ performance_monitor.target_fps = target_fps
 print(f"Hardware detectado: {hardware_info['tier']} - FPS alvo: {target_fps}")
 
 font_size = WIDTH // 53
-title_size = WIDTH // 30
 font = pygame.font.SysFont("Arial", font_size)
-title_font = pygame.font.SysFont("Arial", title_size)
-
-# Tamanhos dinâmicos com base na resolução da tela
-logo_width = int(WIDTH * 0.5)
-logo_height = int(logo_width * 0.625)
-
-# Carrega e redimensiona as imagens definidas no settings.py
-
 
 game_data = load_game_data()
 max_scores = game_data.get("max_scores", {})
@@ -562,6 +549,10 @@ def draw_fase_concluida(score):
 
 def draw_main_menu():
     global frame_timer, frame_index 
+
+    frame_timer = 0
+    frame_index = 0
+    FRAME_DURATION = 100
 
     running = True
     while running:

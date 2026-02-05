@@ -2,7 +2,10 @@
 import json
 import os
 
-SAVE_FILE = "save_data.json"
+# Encontra o diretório de dados relativo à localização deste arquivo
+DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
+os.makedirs(DATA_DIR, exist_ok=True)
+SAVE_FILE = os.path.join(DATA_DIR, "save_data.json")
 
 def load_game_data():
     if os.path.exists(SAVE_FILE):
