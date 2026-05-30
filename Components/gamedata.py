@@ -1,9 +1,13 @@
 
 import json
 import os
+import sys
 
 # Encontra o diretório de dados relativo à localização deste arquivo
-DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
+if getattr(sys, "frozen", False):
+    DATA_DIR = os.path.join(os.path.dirname(sys.executable), "data")
+else:
+    DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 os.makedirs(DATA_DIR, exist_ok=True)
 SAVE_FILE = os.path.join(DATA_DIR, "save_data.json")
 

@@ -1,12 +1,16 @@
 
 import pygame
 import os
+import sys
 from PIL import Image
 
 pygame.init()
 
 # Diretório base do projeto (um nível acima de Components/)
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if getattr(sys, "frozen", False):
+    PROJECT_DIR = sys._MEIPASS
+else:
+    PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 #cores
 WHITE = (255, 255, 255)
